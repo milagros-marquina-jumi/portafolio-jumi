@@ -44,6 +44,31 @@ ruta_git() {
   if command -v cygpath >/dev/null 2>&1; then cygpath -m -- "$1"; else printf '%s' "$1"; fi
 }
 
+# 0) Perfil del repositorio
+# El CI carga .github/motor-perfil.conf antes de ejecutar los controles. Sin
+# esto el hook aplicaba los valores por defecto, que no son los mismos: en un
+# repositorio de codigo MTS_BLOQUEAR_SCRIPTS vale 0 en el perfil y 1 por
+# defecto, asi que el hook abortaba cada commit de un .js que el CI aprobaba.
+# Dos politicas distintas para el mismo repositorio es peor que una sola
+# estricta: ensena a saltarse el hook con --no-verify.
+#
+# Se filtra a las claves conocidas, igual que en el workflow: un .conf editado
+# no puede exportar entorno arbitrario al resto del hook.
+perfil=".github/motor-perfil.conf"
+if [ -f "$perfil" ]; then
+  while IFS= read -r linea || [ -n "$linea" ]; do
+    linea=$(printf '%s' "$linea" | tr -d '\r')
+    case "$linea" in
+      MTS_LISTA_EJECUTABLES=*|MTS_LISTA_AUTORES=*|MTS_SCANIGNORE=*|MTS_BLOQUEAR_SCRIPTS=*|MTS_MAX_LINEA_CONFIG=*|MTS_RUTA_DETECTOR=*|MTS_VERIFICAR_LOCALES=*) ;;
+      ''|\#*) continue ;;
+      *) printf 'COMMIT ABORTADO: clave no reconocida en %s: %s\n' "$perfil" "$linea" >&2; exit 1 ;;
+    esac
+    clave="${linea%%=*}"; valor="${linea#*=}"
+    valor="${valor%\"}"; valor="${valor#\"}"
+    export "$clave=$valor"
+  done < "$perfil"
+fi
+
 # 1) Archivos prohibidos en el indice
 # La lista vive en .github/check-prohibidos.sh, no aqui: el CI aplica esa
 # misma lista sobre el arbol y sobre el rango empujado, asi que un `git commit

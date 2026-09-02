@@ -61,7 +61,7 @@ Para ejecutar este proyecto localmente, sigue estos pasos:
 2. Navega al directorio del proyecto:
 
    ```bash
-   cd portfolio-jumi
+   cd portafolio-jumi
    ```
 
 3. Instala las dependencias:
@@ -84,7 +84,7 @@ Para ejecutar este proyecto localmente, sigue estos pasos:
 
 Puedes ver el proyecto en vivo en GitHub Pages:
 
-[https://milagros-marquina-jumi.github.io/portfolio-jumi](https://milagros-marquina-jumi.github.io/portfolio-jumi)
+[https://milagros-marquina-jumi.github.io/portafolio-jumi](https://milagros-marquina-jumi.github.io/portafolio-jumi)
 
 ---
 
