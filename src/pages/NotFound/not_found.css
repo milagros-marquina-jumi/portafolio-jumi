@@ -1,0 +1,33 @@
+.not-found-page {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.not-found-page .container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-404 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.info-404 a {
+    color: var(--primary-color);
+    width: 100%;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.info-404 a:hover {
+    text-decoration: underline;
+}

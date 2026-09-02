@@ -1,0 +1,120 @@
+name: Seguridad - integridad de configuracion
+
+# WORKFLOW VENDORIZADO. Los controles viven DENTRO de este repositorio, en
+# .github/, en vez de invocarse desde mimotech-security.
+#
+# Se usa cuando el repositorio esta FUERA de la organizacion mimotech-projects:
+# una GitHub Action privada solo la pueden invocar repositorios de la misma
+# organizacion, asi que un repo personal o de un cliente no puede consumirla.
+#
+# El precio es explicito: estas copias NO se actualizan solas. De que version
+# vienen esta anotado en .github/motor-version.txt, y se refrescan volviendo a
+# ejecutar `scripts/vendorizar.sh` desde el motor.
+#
+# .github/motor-version.txt dice de que version vienen los archivos; NO prueba
+# que nadie los haya tocado despues. Eso lo dan CODEOWNERS y la revision
+# obligatoria, igual que para cualquier otro archivo del repositorio.
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: Escanear configuraciones y assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Traer la rama base
+        env:
+          BASE_REF: ${{ github.base_ref || 'master' }}
+        run: git fetch --no-tags origin "$BASE_REF:refs/remotes/origin/$BASE_REF" || true
+
+      # El perfil se publica al resto de pasos filtrando a las claves conocidas:
+      # un .conf editado no puede inyectar entorno arbitrario en el runner.
+      - name: Cargar el perfil
+        run: |
+          set -uo pipefail
+          conf=".github/motor-perfil.conf"
+          [ -f "$conf" ] || { echo "::error::Falta $conf."; exit 1; }
+          while IFS= read -r linea; do
+            linea=$(printf '%s' "$linea" | tr -d '\r')
+            case "$linea" in
+              MTS_LISTA_EJECUTABLES=*|MTS_LISTA_AUTORES=*|MTS_SCANIGNORE=*|MTS_BLOQUEAR_SCRIPTS=*|MTS_MAX_LINEA_CONFIG=*|MTS_RUTA_DETECTOR=*|MTS_VERIFICAR_LOCALES=*) ;;
+              ''|\#*) continue ;;
+              *) echo "::error::Clave no reconocida en $conf: '$linea'"; exit 1 ;;
+            esac
+            clave="${linea%%=*}"; valor="${linea#*=}"
+            valor="${valor%\"}"; valor="${valor#\"}"
+            printf '%s=%s\n' "$clave" "$valor" >> "$GITHUB_ENV"
+          done < "$conf"
+          sed -n '1,6p' .github/motor-version.txt
+
+      # Los controles se ejecutan en su version de la rama base. Si se usara la
+      # que trae el PR, un pull request podria ampliar las listas o excluirse
+      # del detector y pedirle a esa misma version que lo aprobara.
+      - name: Restaurar configuracion desde la rama base
+        if: github.event_name == 'pull_request' && github.base_ref != 'master'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: bash .github/restaurar-config-base.sh "$BASE_SHA"
+
+      - name: Validar sintaxis de los controles
+        run: |
+          set -euo pipefail
+          for s in .github/*.sh; do bash -n "$s"; done
+
+      - name: Detectar inyeccion en configuraciones y assets
+        run: bash .github/scan-malware.sh
+
+      - name: Bloquear archivos prohibidos (todo el arbol)
+        run: bash .github/check-prohibidos.sh --arbol
+
+      - name: Calcular el rango a revisar
+        id: rango
+        env:
+          EVENTO: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PUSH_ANTES: ${{ github.event.before }}
+        run: |
+          set -uo pipefail
+          if [ "$EVENTO" = "pull_request" ]; then base="${PR_BASE:-}"; else base="${PUSH_ANTES:-}"; fi
+          rango=$(bash .github/calcular-rango.sh "$base")
+          echo "rango=$rango" >> "$GITHUB_OUTPUT"
+          echo "Rango a revisar: $rango"
+
+      - name: Bloquear archivos prohibidos (rango empujado)
+        if: steps.rango.outputs.rango != 'HEAD'
+        env:
+          RANGO: ${{ steps.rango.outputs.rango }}
+        run: bash .github/check-prohibidos.sh --rango "$RANGO"
+
+      - name: Verificar identidad configurada en los commits
+        env:
+          RANGO: ${{ steps.rango.outputs.rango }}
+        run: bash .github/check-authors.sh "$RANGO"
+
+      - name: Comprobar la rama de origen del PR
+        env:
+          MTS_REPO_ORIGEN: ${{ github.event.pull_request.head.repo.full_name }}
+        run: bash .github/check-origen.sh master develop

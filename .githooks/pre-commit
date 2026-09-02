@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# Ultima barrera local antes de que algo entre al historial de Git.
+#
+# Activar una sola vez despues de `git init` (no viaja en el repo):
+#   git config core.hooksPath .githooks
+#   chmod +x .githooks/pre-commit .github/scan-malware.sh
+#
+# Identidad permitida, por repositorio:
+#   git config --local user.name  "Nombre Apellido"
+#   git config --local user.email "correo@dominio.com"
+#   git config --local --add security.allowedEmail "correo@dominio.com"
+#
+# Politica: falla cerrado. Si una verificacion no puede ejecutarse, aborta.
+#
+# LO QUE ESTE HOOK NO PUEDE HACER (va en CI, ver security-integrity.yml):
+#   - `git commit --no-verify` lo salta entero.
+#   - `git commit --author="Otro <otro@x>"` no es visible desde un pre-commit.
+#   - Un clon sin `core.hooksPath` configurado no lo ejecuta nunca.
+# Por eso las mismas verificaciones se repiten en CI sobre la rama protegida.
+#
+# Compatible con bash 3.2 (macOS), Git Bash (Windows) y Linux.
+
+set -uo pipefail
+export LC_ALL=C
+
+fail=0
+abortar() { printf 'COMMIT ABORTADO: %s\n' "$1" >&2; fail=1; }
+
+for cmd in git grep sed tr mktemp; do
+  command -v "$cmd" >/dev/null 2>&1 || { printf 'COMMIT ABORTADO: falta %s.\n' "$cmd" >&2; exit 1; }
+done
+
+raiz=$(git rev-parse --show-toplevel 2>/dev/null) \
+  || { printf 'COMMIT ABORTADO: no se pudo determinar la raiz del repositorio.\n' >&2; exit 1; }
+cd -- "$raiz" \
+  || { printf 'COMMIT ABORTADO: no se pudo entrar a la raiz del repositorio.\n' >&2; exit 1; }
+
+tmp=$(mktemp -d 2>/dev/null) \
+  || { printf 'COMMIT ABORTADO: mktemp fallo, no se puede verificar.\n' >&2; exit 1; }
+trap 'rm -rf "$tmp"' EXIT
+
+# Ruta del temporal en formato que entienda git.exe en Windows.
+ruta_git() {
+  if command -v cygpath >/dev/null 2>&1; then cygpath -m -- "$1"; else printf '%s' "$1"; fi
+}
+
+# 1) Archivos prohibidos en el indice
+# La lista vive en .github/check-prohibidos.sh, no aqui: el CI aplica esa
+# misma lista sobre el arbol y sobre el rango empujado, asi que un `git commit
+# --no-verify` no cambia el resultado. Duplicar los patrones en dos sitios era
+# garantizar que tarde o temprano dejaran de coincidir.
+prohibidos=".github/check-prohibidos.sh"
+if [ ! -f "$prohibidos" ]; then
+  abortar "falta $prohibidos. No se puede verificar."
+elif ! bash "$prohibidos" --indice; then
+  abortar "hay archivos prohibidos en el indice (ver arriba).
+    Corrige el .gitignore y sacalos con: git restore --staged -- <archivo>"
+fi
+
+# 2) Integridad de los archivos de control
+# No basta con proteger el detector: quien puede editar la allowlist de
+# ejecutables, la lista de correos autorizados o .scanignore desactiva los
+# controles sin tocar el detector. Los cuatro se tratan igual.
+detector=".github/scan-malware.sh"
+CONTROLES=".github/scan-malware.sh .github/check-prohibidos.sh .github/autores-permitidos.txt .github/ejecutables-permitidos.txt .scanignore .github/workflows/security-integrity.yml .githooks/pre-commit"
+
+for c in $CONTROLES; do
+  [ -e "$c" ] || continue
+  git ls-files --error-unmatch -- "$c" >/dev/null 2>&1 \
+    || abortar "$c existe pero no esta versionado. No se puede verificar."
+done
+[ -f "$detector" ] || abortar "falta $detector. No se puede verificar el repositorio."
+
+# Que la version que se va a commitear sea la misma que ya esta en la rama.
+# Un detector neutralizado y commiteado en el mismo commit pasaria todos los
+# controles: se corre a si mismo y se aprueba. Cambiarlo exige un permiso
+# explicito y de un solo uso, que queda visible en la revision del PR.
+if git rev-parse --verify -q HEAD >/dev/null 2>&1; then
+  tocados=""
+  for c in $CONTROLES; do
+    git diff --cached --quiet -- "$c" 2>/dev/null || tocados="$tocados $c"
+  done
+  if [ -n "$tocados" ]; then
+    permitir=$(git config --local --get security.allowScannerChange 2>/dev/null || true)
+    if [ "$permitir" != "true" ]; then
+      abortar "el commit modifica archivos de control:$tocados
+    Si el cambio es legitimo, autorizalo de forma explicita y de un solo uso:
+      git config --local security.allowScannerChange true
+      git commit ...
+      git config --local --unset security.allowScannerChange
+    En CI ese cambio ademas exige revision (CODEOWNERS)."
+    else
+      printf 'AVISO: se modifican archivos de control con permiso explicito:%s\n' "$tocados" >&2
+      # "De un solo uso" tiene que ser cierto, no una instruccion en un mensaje
+      # que alguien recordara ejecutar. Antes el permiso quedaba activo hasta
+      # que se borraba a mano: bastaba olvidarlo una vez para dejar el control
+      # de integridad desactivado indefinidamente, sin ninguna senal.
+      git config --local --unset security.allowScannerChange 2>/dev/null || true
+      printf '       (permiso consumido: security.allowScannerChange se ha desactivado)\n' >&2
+    fi
+  fi
+fi
+
+# 3) Escaneo del CONTENIDO QUE SE VA A COMMITEAR
+# Se escanea una copia del INDICE, no el arbol de trabajo. Con `git add`
+# seguido de una restauracion del archivo en disco, o con `git add -p`, o con
+# `git commit -- <rutas>`, el arbol de trabajo esta limpio y el indice no:
+# escanear el disco dejaba pasar exactamente ese caso.
+mkdir -p "$tmp/idx"
+if ! git checkout-index --all --force --prefix="$(ruta_git "$tmp/idx")/" 2>"$tmp/co.err"; then
+  abortar "no se pudo materializar el indice para escanearlo. No se puede verificar."
+  sed 's/^/    /' "$tmp/co.err" >&2
+elif [ ! -f "$tmp/idx/$detector" ]; then
+  abortar "$detector no aparece en el indice. No se puede verificar."
+elif ! bash -n "$tmp/idx/$detector" 2>"$tmp/sintaxis.err"; then
+  abortar "$detector tiene errores de sintaxis en la version que se va a commitear:"
+  sed 's/^/    /' "$tmp/sintaxis.err" >&2
+else
+  ( cd -- "$tmp/idx" && bash "./$detector" ) || \
+    abortar "el detector encontro hallazgos o no pudo completarse (ver arriba)."
+fi
+
+# 4) Identidad
+# Se exige configuracion LOCAL: heredar user.email del global es como se
+# commitea sin darse cuenta con la cuenta vieja o con la equivocada.
+nombre_local=$(git config --local --get user.name  2>/dev/null || true)
+correo_local=$(git config --local --get user.email 2>/dev/null || true)
+[ -n "$nombre_local" ] || abortar "git user.name no esta configurado localmente (git config --local user.name ...)."
+[ -n "$correo_local" ] || abortar "git user.email no esta configurado localmente (git config --local user.email ...)."
+
+git config --local --get-all security.allowedEmail 2>/dev/null > "$tmp/permitidos.raw" || true
+grep -v '^[[:space:]]*$' "$tmp/permitidos.raw" > "$tmp/permitidos" 2>/dev/null || : > "$tmp/permitidos"
+
+if [ ! -s "$tmp/permitidos" ]; then
+  abortar "no hay correos autorizados. Configura: git config --local --add security.allowedEmail \"correo@dominio.com\""
+else
+  # git var resuelve la identidad EFECTIVA: incluye GIT_AUTHOR_EMAIL y
+  # GIT_COMMITTER_EMAIL del entorno, que sobrescriben la config y son la via
+  # obvia para saltarse una comprobacion que solo mire `git config`.
+  autor=$(git var GIT_AUTHOR_IDENT 2>/dev/null | sed -n 's/.*<\(.*\)>.*/\1/p')
+  committer=$(git var GIT_COMMITTER_IDENT 2>/dev/null | sed -n 's/.*<\(.*\)>.*/\1/p')
+  if [ -z "$autor" ] || [ -z "$committer" ]; then
+    abortar "no se pudo determinar la identidad efectiva del commit."
+  else
+    for par in "autor:$autor" "committer:$committer"; do
+      rol="${par%%:*}"; correo="${par#*:}"
+      correo_baja=$(printf '%s' "$correo" | tr 'A-Z' 'a-z')
+      encontrado=0
+      while IFS= read -r permitido; do
+        [ -n "$permitido" ] || continue
+        permitido_baja=$(printf '%s' "$permitido" | tr 'A-Z' 'a-z')
+        [ "$correo_baja" = "$permitido_baja" ] && { encontrado=1; break; }
+      done < "$tmp/permitidos"
+      if [ "$encontrado" -ne 1 ]; then
+        printf 'COMMIT ABORTADO: correo de %s no autorizado: %s\n' "$rol" "$correo" >&2
+        printf '  Autorizados en este repositorio:\n' >&2
+        sed 's/^/    /' "$tmp/permitidos" >&2
+        fail=1
+      fi
+    done
+  fi
+fi
+
+[ "$fail" -eq 0 ] && exit 0
+printf '\nVer [[Runbook - Respuesta a Incidente de Seguridad]] si el hallazgo es real.\n' >&2
+exit 1

@@ -1,0 +1,15 @@
+# Correos autorizados como autor y committer en este repositorio.
+# Uno por linea. Comparacion exacta, sin distinguir mayusculas.
+# Se ignoran comentarios, lineas vacias y el CR de archivos de Windows.
+#
+# Debe coincidir con security.allowedEmail del hook pre-commit local:
+#   git config --local --get-all security.allowedEmail
+#
+# El correo personal de Gmail NO esta aqui a proposito: el
+# repositorio es publico y el historial se reinicio precisamente para dejar de
+# exponerlo. GitHub ademas lo rechaza en el push (GH007).
+#
+# Identidades de bots o del boton de merge de GitHub (por ejemplo
+# noreply@github.com) NO estan permitidas: si se empieza a usar el merge desde
+# la web, hay que agregarlas aqui de forma explicita, nunca con un patron amplio.
+64057269+milagros-marquina-jumi@users.noreply.github.com

@@ -1,0 +1,17 @@
+# Revision obligatoria para los archivos que definen los controles de
+# seguridad. Sin esto, la restauracion de controles desde la rama base solo
+# avisa: nada impide mezclar un PR que los debilite.
+#
+# Ademas hay que activar en la proteccion de master:
+#   "Require review from Code Owners".
+
+/.github/scan-malware.sh          @milagros-marquina-jumi
+/.github/check-prohibidos.sh      @milagros-marquina-jumi
+/.github/autores-permitidos.txt   @milagros-marquina-jumi
+/.github/ejecutables-permitidos.txt @milagros-marquina-jumi
+/.github/workflows/               @milagros-marquina-jumi
+/.github/CODEOWNERS               @milagros-marquina-jumi
+/.githooks/                       @milagros-marquina-jumi
+/.scanignore                      @milagros-marquina-jumi
+/.gitignore                       @milagros-marquina-jumi
+/SECURITY.md                      @milagros-marquina-jumi

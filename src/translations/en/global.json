@@ -1,0 +1,37 @@
+{
+    "about-me-page": {
+        "title": "ABOUT ME",
+        "description": "Full Stack developer with +1 year of experience using technologies like Angular, Spring Boot, React, NodeJS, Java and more. I am passionate about the world of web and mobile development. I have knowledge in Front-End, Back-End and other areas such as mobile development and desktop development. I like to learn about new technologies and support in the development of projects and improvement initiatives to achieve the expected results.",
+        "my-skills": "My skills",
+        "see-projects": "See Projects",
+        "download-cv": "Download CV"
+    },
+    "home-page": {
+        "title": "Hi, I'm",
+        "description": "I am passionate about the world of web development, learning about new technologies and supporting the development of projects and improvement initiatives to achieve the expected results.",
+        "btn-see-more": "See more"
+    },
+    "projects-page": {
+        "title": "Projects",
+        "type": "Mobile"
+    },
+    "project-type-page": {
+        "search": "Search project...",
+        "no-results": "No results found"
+    },
+    "project-details-page": {
+        "subtitle": "Project"
+    },
+    "contact-page": {
+        "name": "Name *",
+        "email": "Email *",
+        "message": "Message *",
+        "btn-send": "Send"
+    },
+    "navbar-page": {
+        "home": "Home",
+        "about-me": "About me",
+        "projects": "Projects",
+        "contact": "Contact"
+    }
+}

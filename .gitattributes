@@ -1,0 +1,12 @@
+# Los controles vendorizados se ejecutan en Ubuntu (runner) y en Git Bash.
+# Un CRLF en un script hace que bash falle con "bad interpreter", asi que estos
+# archivos se materializan siempre con LF, tambien en Windows.
+#
+# El alcance es deliberadamente estrecho: normalizar todo el proyecto cambiaria
+# los finales de linea del codigo fuente sin que nadie lo haya pedido.
+.github/*.sh            text eol=lf
+.github/*.conf          text eol=lf
+.github/*.txt           text eol=lf
+.github/CODEOWNERS      text eol=lf
+.github/workflows/*.yml text eol=lf
+.githooks/*             text eol=lf

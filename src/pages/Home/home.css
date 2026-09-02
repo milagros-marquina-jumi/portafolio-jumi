@@ -1,0 +1,115 @@
+.social-media {
+    display: flex;
+    height: 1em;
+    align-items: center;
+    justify-content: start;
+}
+
+.social-media a {
+    margin: 1em;
+}
+
+.icon-social {
+    width: 2em;
+    height: 2em;
+}
+
+.icon-linkedin:hover,
+.icon-github:hover,
+.icon-whatsapp:hover {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+}
+
+.icon-linkedin,
+.icon-github,
+.icon-whatsapp {
+    background-repeat: no-repeat;
+}
+
+.icon-linkedin {
+    background-image: url(/assets/svg/linkedin.svg);
+}
+
+.icon-github {
+    background-image: url(/assets/svg/github.svg);
+}
+
+.icon-whatsapp {
+    background-image: url(/assets/svg/whatsapp.svg);
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--section-height);
+    padding: var(--padding-page);
+}
+
+.info-hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    height: 100%;
+}
+
+.info-hero h1 {
+    font-weight: 100;
+    font-size: 2.4vw;
+}
+
+.info-hero strong {
+    font-family: var(--font-family-reemkufi)
+}
+
+.description {
+    position: relative;
+    z-index: 1;
+}
+
+.description p {
+    margin-top: 0.5em;
+    font-size: 1.5em;
+}
+
+.container-bot {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    margin-top: 1em;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dev-jumi-photo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.dev-jumi-photo img {
+    width: 50%;
+    max-width: 790px;
+    min-width: 200px;
+}
+
+.img-hero {
+    position: fixed;
+    left: -30px;
+    bottom: -60px;
+    pointer-events: none;
+}
+
+.img-hero img {
+    width: 25em;
+    opacity: 0.4;
+}

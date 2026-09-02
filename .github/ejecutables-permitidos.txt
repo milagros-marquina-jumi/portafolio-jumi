@@ -1,0 +1,14 @@
+# Rutas que PUEDEN llevar el bit de ejecucion (100755). Cualquier otro archivo
+# ejecutable en el arbol se bloquea: un binario o un script con extension
+# inocente sigue siendo ejecutable, y esa es la via por la que entro el kit del
+# incidente de 2026-09-01.
+#
+# Los que estan aqui son los controles vendorizados del motor, nada mas. Un
+# proyecto de frontend no necesita ningun ejecutable propio.
+.github/scan-malware.sh
+.github/check-prohibidos.sh
+.github/check-authors.sh
+.github/check-origen.sh
+.github/calcular-rango.sh
+.github/restaurar-config-base.sh
+.githooks/pre-commit
