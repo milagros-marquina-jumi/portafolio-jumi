@@ -1,0 +1,56 @@
+name: Build
+
+# Existe por una razon concreta. El PR que subio @vitejs/plugin-react a 6 paso
+# entero el control de seguridad y dejo la rama sin poder instalarse: la 6
+# exige vite ^8 y el proyecto tiene vite ^6. Ese control verifica que no haya
+# malware, archivos prohibidos ni identidades sin autorizar; no compila nada.
+# Un status check verde no dice que el proyecto funcione, y aqui es donde se
+# dice.
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Este nombre es el que referencia el ruleset como status check
+    # obligatorio. Renombrarlo deja los pull requests esperando para siempre a
+    # un check que ya no reporta.
+    name: Compilar y revisar el codigo
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7.0.0
+        with:
+          persist-credentials: false
+
+      # Se usa el Node que trae el runner en vez de actions/setup-node: es una
+      # accion menos que anclar por SHA y menos superficie de la que responder.
+      - name: Version de Node
+        run: node --version && npm --version
+
+      # --ignore-scripts es deliberado y no lo reemplaza CI=true: un preinstall
+      # o un postinstall de una dependencia comprometida se ejecutaria aqui con
+      # acceso a la red. La compilacion se invoca despues, de forma explicita.
+      - name: Instalar dependencias
+        run: npm ci --ignore-scripts
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Revisar el codigo
+        run: npm run lint
