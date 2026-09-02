@@ -17,7 +17,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-i18next": "^11.16.8",
-    "react-router-dom": "^6.2.2",
+    "react-router-dom": "^7.18.3",
     "react-spinners": "^0.17.0",
     "styled-components": "^5.3.5",
     "sweetalert2": "^11.4.4"
@@ -35,5 +35,8 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.68.0",
     "vite": "^6.2.0"
+  },
+  "overrides": {
+    "picomatch": "^4.0.7"
   }
 }
