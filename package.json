@@ -14,7 +14,7 @@
   "dependencies": {
     "emailjs-com": "^3.2.0",
     "i18next": "^21.7.1",
-    "react": "^19.0.0",
+    "react": "^19.2.8",
     "react-dom": "^19.0.0",
     "react-i18next": "^11.16.8",
     "react-router-dom": "^6.2.2",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@types/react": "^19.0.10",
+    "@types/react": "^19.2.18",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
