@@ -22,3 +22,13 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: chore
+    # react y react-dom tienen que subir SIEMPRE juntas. Cuando Dependabot
+    # subio react a 19.2.8 dejando react-dom en 19.1.0, la pagina murio entera
+    # con el error 527 de React. Los tipos van en el mismo grupo por lo mismo.
+    groups:
+      react:
+        patterns:
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
