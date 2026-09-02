@@ -50,8 +50,8 @@ function App() {
 					<Layout>
 						<Routes>
 							<Route path="*" element={<NotFoundPage />} />
-							<Route path="/" element={<Navigate to="/portfolio-jumi" />} />
-							<Route exact path="/portfolio-jumi" element={<HomePage />} />
+							<Route path="/" element={<Navigate to="/portafolio-jumi" />} />
+							<Route exact path="/portafolio-jumi" element={<HomePage />} />
 							<Route exact path="/about-me" element={<AboutMePage />} />
 							<Route exact path="/contact" element={<ContactPage />} />
 							<Route exact path="/projects" element={<ProjectsPage />} />
