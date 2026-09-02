@@ -5,11 +5,23 @@
 # Debe coincidir con security.allowedEmail del hook pre-commit local:
 #   git config --local --get-all security.allowedEmail
 #
-# El correo personal de Gmail NO esta aqui a proposito: el
-# repositorio es publico y el historial se reinicio precisamente para dejar de
-# exponerlo. GitHub ademas lo rechaza en el push (GH007).
-#
-# Identidades de bots o del boton de merge de GitHub (por ejemplo
-# noreply@github.com) NO estan permitidas: si se empieza a usar el merge desde
-# la web, hay que agregarlas aqui de forma explicita, nunca con un patron amplio.
+# El correo personal de Gmail NO esta aqui a proposito: el repositorio es
+# publico y el historial se reinicio precisamente para dejar de exponerlo.
+# GitHub ademas lo rechaza en el push (GH007).
 64057269+milagros-marquina-jumi@users.noreply.github.com
+
+# Identidad del boton de merge de GitHub (squash y rebase desde la web).
+# El commit resultante lo firma GitHub con su propia clave y lleva este
+# committer; sin esta linea, el CI rechazaria cada merge de un PR.
+# Es una identidad concreta, no un patron: cualquier otro bot hay que
+# agregarlo aqui uno por uno.
+noreply@github.com
+
+# Dependabot. Necesario para que sus pull requests de actualizacion pasen el
+# control de identidad; sin esto fallan siempre y no se pueden mezclar.
+#
+# Que lo contiene: sus commits van firmados por GitHub y verificados, solo
+# actua sobre ramas dependabot/* que crea el propio GitHub, y su PR sigue
+# necesitando revision y todos los demas checks. Recuerda que este control
+# detecta identidades mal configuradas, no autentica a nadie.
+49699333+dependabot[bot]@users.noreply.github.com
