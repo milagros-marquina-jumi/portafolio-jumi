@@ -45,12 +45,18 @@ ruta_git() {
 }
 
 # 0) Perfil del repositorio
-# El CI carga .github/motor-perfil.conf antes de ejecutar los controles. Sin
-# esto el hook aplicaba los valores por defecto, que no son los mismos: en un
-# repositorio de codigo MTS_BLOQUEAR_SCRIPTS vale 0 en el perfil y 1 por
-# defecto, asi que el hook abortaba cada commit de un .js que el CI aprobaba.
-# Dos politicas distintas para el mismo repositorio es peor que una sola
-# estricta: ensena a saltarse el hook con --no-verify.
+# La Action carga el perfil antes de ejecutar los controles. El hook no lo
+# hacia, asi que aplicaba los valores por defecto: en un repositorio de codigo
+# MTS_BLOQUEAR_SCRIPTS vale 0 en el perfil generic y 1 por defecto, y el hook
+# abortaba cada commit de un .js que el CI aprobaba sin problema.
+#
+# Dos politicas distintas para el mismo repositorio son peores que una sola
+# estricta: la unica salida practica que le dejan a quien comitea es
+# --no-verify, y eso apaga el hook entero, no solo la regla que estorba.
+#
+# El archivo lo escribe instalar-local.sh (o vendorizar.sh). Si no existe se
+# usan los valores por defecto, que es lo correcto para un repositorio
+# documental: ahi coinciden con el perfil vault.
 #
 # Se filtra a las claves conocidas, igual que en el workflow: un .conf editado
 # no puede exportar entorno arbitrario al resto del hook.
