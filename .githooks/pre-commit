@@ -65,7 +65,7 @@ if [ -f "$perfil" ]; then
   while IFS= read -r linea || [ -n "$linea" ]; do
     linea=$(printf '%s' "$linea" | tr -d '\r')
     case "$linea" in
-      MTS_LISTA_EJECUTABLES=*|MTS_LISTA_AUTORES=*|MTS_SCANIGNORE=*|MTS_BLOQUEAR_SCRIPTS=*|MTS_MAX_LINEA_CONFIG=*|MTS_RUTA_DETECTOR=*|MTS_VERIFICAR_LOCALES=*) ;;
+      MTS_LISTA_EJECUTABLES=*|MTS_LISTA_AUTORES=*|MTS_SCANIGNORE=*|MTS_BLOQUEAR_SCRIPTS=*|MTS_MAX_LINEA_CONFIG=*|MTS_RUTA_DETECTOR=*|MTS_VERIFICAR_LOCALES=*|MTS_NODE=*|MTS_LISTA_SCRIPTS_INSTALACION=*) ;;
       ''|\#*) continue ;;
       *) printf 'COMMIT ABORTADO: clave no reconocida en %s: %s\n' "$perfil" "$linea" >&2; exit 1 ;;
     esac
@@ -73,6 +73,28 @@ if [ -f "$perfil" ]; then
     valor="${valor%\"}"; valor="${valor#\"}"
     export "$clave=$valor"
   done < "$perfil"
+fi
+
+# 0b) Hooks del proyecto, si los hay
+# Git solo admite UN core.hooksPath, asi que dos gestores de ganchos compitiendo
+# por el no es una configuracion: es una carrera. El motor es el dueno de
+# .githooks/ -es copia gestionada y esta en el manifiesto-, y el proyecto pone
+# lo suyo aqui. Al reves -que el proyecto reescriba .githooks/pre-commit- su
+# codigo lo pisaria la proxima reinstalacion del motor, y verificar-local.sh
+# avisaria de deriva para siempre: un aviso irresoluble ensena a ignorar los
+# avisos.
+#
+# Se ejecuta ANTES que los controles de seguridad, y el orden no es arbitrario.
+# Un hook de proyecto puede reformatear (`biome --write`, `lint-staged`), asi
+# que el escaneo tiene que ver el contenido DEFINITIVO. Al reves revisaria una
+# version y se commitearia otra.
+#
+# Si el hook del proyecto falla, se aborta sin ejecutar nada mas: no tiene
+# sentido escanear un arbol que su propio proyecto considera invalido.
+proyecto_hook="scripts/hooks/pre-commit"
+if [ -f "$proyecto_hook" ] && ! bash "$proyecto_hook"; then
+  abortar "el hook del proyecto ($proyecto_hook) fallo. No se ejecuto nada mas."
+  exit 1
 fi
 
 # 1) Archivos prohibidos en el indice
@@ -86,6 +108,20 @@ if [ ! -f "$prohibidos" ]; then
 elif ! bash "$prohibidos" --indice; then
   abortar "hay archivos prohibidos en el indice (ver arriba).
     Corrige el .gitignore y sacalos con: git restore --staged -- <archivo>"
+fi
+
+# 1b) Higiene de dependencias, si el perfil lo pide
+# Misma politica en local y en CI: esa fue la leccion de 0.4.3. Un postinstall
+# recien añadido se para aqui, antes de entrar al historial, en vez de
+# descubrirse en el pull request.
+if [ "${MTS_NODE:-0}" = "1" ]; then
+  nodo=".github/check-node.sh"
+  if [ ! -f "$nodo" ]; then
+    abortar "el perfil pide MTS_NODE=1 pero falta $nodo.
+    Reinstala los controles locales:  bash scripts/instalar-local.sh <repo> --perfil node"
+  elif ! bash "$nodo" --todo; then
+    abortar "la higiene de dependencias no pasa (ver arriba)."
+  fi
 fi
 
 # 2) Integridad de los archivos de control

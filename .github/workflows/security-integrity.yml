@@ -60,7 +60,7 @@ jobs:
           while IFS= read -r linea; do
             linea=$(printf '%s' "$linea" | tr -d '\r')
             case "$linea" in
-              MTS_LISTA_EJECUTABLES=*|MTS_LISTA_AUTORES=*|MTS_SCANIGNORE=*|MTS_BLOQUEAR_SCRIPTS=*|MTS_MAX_LINEA_CONFIG=*|MTS_RUTA_DETECTOR=*|MTS_VERIFICAR_LOCALES=*) ;;
+              MTS_LISTA_EJECUTABLES=*|MTS_LISTA_AUTORES=*|MTS_SCANIGNORE=*|MTS_BLOQUEAR_SCRIPTS=*|MTS_MAX_LINEA_CONFIG=*|MTS_RUTA_DETECTOR=*|MTS_VERIFICAR_LOCALES=*|MTS_NODE=*|MTS_LISTA_SCRIPTS_INSTALACION=*) ;;
               ''|\#*) continue ;;
               *) echo "::error::Clave no reconocida en $conf: '$linea'"; exit 1 ;;
             esac
@@ -118,3 +118,12 @@ jobs:
         env:
           MTS_REPO_ORIGEN: ${{ github.event.pull_request.head.repo.full_name }}
         run: bash .github/check-origen.sh master develop
+
+      # Solo si el perfil lo pide. Cubre el vector del incidente 2026-09-01:
+      # codigo de terceros que se ejecuta al instalar. Lo que NO cubre son los
+      # scripts de las DEPENDENCIAS; contra eso solo hay una cosa, y va en el
+      # job de build, no aqui:  npm ci --ignore-scripts
+      # CI=true no lo reemplaza.
+      - name: Comprobar higiene de dependencias
+        if: env.MTS_NODE == '1'
+        run: bash .github/check-node.sh --todo
