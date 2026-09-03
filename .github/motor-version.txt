@@ -1,6 +1,6 @@
 Controles vendorizados desde mimotech-projects/mimotech-security
-version: 0.4.3
-sha:     0cdd75fb43dc53d6f255f3783f4edf60cdb03562
+version: 0.4.4
+sha:     5cb9e614a555cb973be548f1e270fecc6952b428
 perfil:  generic
 fecha:   2026-09-02
 
