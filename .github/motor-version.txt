@@ -1,11 +1,11 @@
 Controles vendorizados desde mimotech-projects/mimotech-security
-version: 0.4.4
-sha:     5cb9e614a555cb973be548f1e270fecc6952b428
-perfil:  generic
-fecha:   2026-09-02
+version: 0.7.1
+sha:     8ded4b26a6e91487c2a5a7401044b7e102c6fe84
+perfil:  node
+fecha:   2026-09-03
 
 Para actualizar, desde el clon del motor en la punta de master:
-    bash scripts/vendorizar.sh <ruta-del-repositorio> --perfil generic
+    bash scripts/vendorizar.sh <ruta-del-repositorio> --perfil node
 
 Checksums en el momento de copiar. Sirven para saber si estas copias
 siguen siendo las del motor, NO para probar que nadie las ha tocado:
@@ -18,4 +18,5 @@ b5401a26b018aeb0fa47c3fdbc78841dba0104371b3151e3b6aff077fe2e4487 *.github/check-
 409892d0f13e95f4c242a3aa78373e1322006ba4338ca796ccc20766def4b935 *.github/check-origen.sh
 d420042c4cd1c5975c83f96666e03c558c690f0dce6140793656b7574235a7f6 *.github/calcular-rango.sh
 366f3238310296cb39382064f40b866882b66041d342d1d74044fcf952aa8043 *.github/restaurar-config-base.sh
-6b9f8c4bacf6476e4fbdc73691d171e04fc19f68cc0d20c9c6184d17345480d5 *.githooks/pre-commit
+f688940391d77853007781a463fd45bb5243219d7d50d75ea9df3d644df3f5d1 *.github/check-node.sh
+19469a8447714a043b08c4b08fe4ce944957b3842642ba36eddbe0fffbdf6e31 *.githooks/pre-commit
