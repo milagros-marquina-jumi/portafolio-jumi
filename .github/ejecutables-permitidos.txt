@@ -11,4 +11,5 @@
 .github/check-origen.sh
 .github/calcular-rango.sh
 .github/restaurar-config-base.sh
+.github/check-node.sh
 .githooks/pre-commit
