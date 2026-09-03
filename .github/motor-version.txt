@@ -1,6 +1,6 @@
 Controles vendorizados desde mimotech-projects/mimotech-security
-version: 0.4.2
-sha:     7345cc955a7c94c66d34f53560e2f5151178a9eb
+version: 0.4.3
+sha:     0cdd75fb43dc53d6f255f3783f4edf60cdb03562
 perfil:  generic
 fecha:   2026-09-02
 
@@ -18,21 +18,4 @@ b5401a26b018aeb0fa47c3fdbc78841dba0104371b3151e3b6aff077fe2e4487 *.github/check-
 409892d0f13e95f4c242a3aa78373e1322006ba4338ca796ccc20766def4b935 *.github/check-origen.sh
 d420042c4cd1c5975c83f96666e03c558c690f0dce6140793656b7574235a7f6 *.github/calcular-rango.sh
 366f3238310296cb39382064f40b866882b66041d342d1d74044fcf952aa8043 *.github/restaurar-config-base.sh
-ff548703f0e53270e14c6c91d4516049d17f196e5cb203a019f6d0138be33f86 *.githooks/pre-commit
-
-PARCHE LOCAL, POR DELANTE DEL MOTOR
-El checksum de .githooks/pre-commit de arriba es el del motor 0.4.2 y ya NO
-coincide con el archivo de este repositorio. La diferencia es deliberada y
-esta es su unica constancia; no se recalculo el checksum a proposito, porque
-recalcularlo habria borrado la senal.
-
-  .githooks/pre-commit   carga .github/motor-perfil.conf antes de ejecutar
-                         los controles, como ya hacia el workflow.
-
-Por que: sin eso el hook usaba los valores por defecto en vez de los del
-perfil. En un repositorio de codigo MTS_BLOQUEAR_SCRIPTS vale 0 en el perfil
-generic y 1 por defecto, asi que el hook abortaba cada commit de un .js que el
-CI aprobaba sin problema. Dos politicas distintas para el mismo repositorio
-terminan enseñando a usar --no-verify, que es peor que cualquiera de las dos.
-
-Cuando el motor publique el arreglo, volver a vendorizar y borrar esta nota.
+6b9f8c4bacf6476e4fbdc73691d171e04fc19f68cc0d20c9c6184d17345480d5 *.githooks/pre-commit
