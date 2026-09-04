@@ -317,7 +317,7 @@ header nav ol li {
 @media screen and (max-width: 1200px) {
 
   /* GENERALES - HOME */
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 55% !important;
   }
 
@@ -498,7 +498,7 @@ header nav ol li {
     display: none;
   }
 
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 55% !important;
     margin-top: 0;
     margin-bottom: 0;
@@ -602,7 +602,7 @@ header nav ol li {
 @media screen and (max-width: 830px) {
 
   /* GENERALES - HOME */
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 60% !important;
   }
 
@@ -623,7 +623,7 @@ header nav ol li {
 @media screen and (max-width: 680px) {
 
   /* GENERALES - HOME */
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 60% !important;
   }
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Swal from 'sweetalert2'
-import DevRocket from '/assets/img/rocket.webp'
+import Hablemos from '/assets/img/jumi-hablemos.webp'
 import emailjs from 'emailjs-com'
 import './contact.css'
 import { useTranslation } from 'react-i18next'
@@ -220,7 +220,7 @@ export function Contact() {
 				</div>
 				<div className="illustration">
 					<figure className="img-send-email noSelect">
-						<img src={DevRocket} alt="Send email" />
+						<img src={Hablemos} alt="Hablemos" />
 					</figure>
 				</div>
 			</div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './Layout'
+import IntroAnimada from './IntroAnimada'
 import NotFoundPage from '../pages/NotFound/NotFoundPage'
 import HomePage from '../pages/Home/HomePage'
 import AboutMePage from '../pages/AboutMe/AboutMePage'
@@ -28,6 +29,7 @@ function App() {
 		<ThemeProvider theme={theme === "dark" ? lightTheme : darkTheme}>
 			<GlobalTheme />
 			<StyledApp>
+				<IntroAnimada />
 				<div className="mode-language">
 					<button
 						type="button"
