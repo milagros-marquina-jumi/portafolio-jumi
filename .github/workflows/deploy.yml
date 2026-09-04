@@ -49,6 +49,9 @@ jobs:
       - name: Instalar dependencias
         run: npm ci --ignore-scripts
 
+      - name: Revisar el codigo
+        run: npm run lint
+
       - name: Compilar
         run: npm run build
 
