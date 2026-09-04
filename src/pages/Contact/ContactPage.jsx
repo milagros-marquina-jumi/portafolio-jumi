@@ -1,6 +1,6 @@
 import React from 'react'
 import Swal from 'sweetalert2'
-import DevRocket from '/assets/img/rocket.png'
+import DevRocket from '/assets/img/rocket.webp'
 import emailjs from 'emailjs-com'
 import './contact.css'
 import { useTranslation } from 'react-i18next'

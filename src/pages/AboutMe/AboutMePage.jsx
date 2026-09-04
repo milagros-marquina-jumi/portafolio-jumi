@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import me from '/assets/img/milagrosmarquina.png'
+import me from '/assets/img/milagrosmarquina.webp'
 import { useTranslation } from 'react-i18next'
 import './about_me.css'
 

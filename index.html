@@ -15,17 +15,8 @@
   <meta name="copyright" content="Milagros Marquina Mora" />
   <link rel="manifest" href="/manifest.json" />
 
-  <!-- PRE CARGA -->
-  <link rel="preload" href="/assets/img/mockup-movil.png" as="image">
-  <link rel="preload" href="/assets/img/projects/restauranteesponja-movil.png" as="image">
-  <link rel="preload" href="/assets/img/mockup-web.png" as="image">
-  <link rel="preload" href="/assets/img/projects/comfeco-web-detail.png" as="image">
-  <link rel="preload" href="/assets/img/projects/kitvskat-web-detail.png" as="image">
-  <link rel="preload" href="/assets/img/projects/milagrosmarquina-web-detail.png" as="image">
-  <link rel="preload" href="/assets/img/projects/restaurante-web-detail.png" as="image">
-  <link rel="preload" href="/assets/img/projects/socialmedia-web-detail.png" as="image">
-  <link rel="preload" href="/assets/img/projects/subastaonline-web-detail.png" as="image">
-  <link rel="preload" href="/assets/img/projects/restauranteesponja-movil-detail.png" as="image">
+  <link rel="preload" href="/assets/img/milagrosmarquina.webp" as="image">
+  <link rel="preload" href="/assets/img/rocket.webp" as="image">
 
   <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,6 +28,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi&display=swap" rel="stylesheet">
 
   <title>Milagros Marquina | Fullstack Developer</title>
+
+  <script>
+    (function () {
+      var l = window.location;
+      if (l.search[1] === '/') {
+        var decodificada = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decodificada + l.hash);
+      }
+    })();
+  </script>
 </head>
 
 <body>

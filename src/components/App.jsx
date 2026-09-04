@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './Layout'
 import NotFoundPage from '../pages/NotFound/NotFoundPage'
 import HomePage from '../pages/Home/HomePage'
@@ -46,12 +46,11 @@ function App() {
 						<img className="cursor-pointer" src={langspanish} alt="" />
 					</div>
 				</div>
-				<BrowserRouter>
+				<BrowserRouter basename={import.meta.env.BASE_URL}>
 					<Layout>
 						<Routes>
 							<Route path="*" element={<NotFoundPage />} />
-							<Route path="/" element={<Navigate to="/portafolio-jumi" />} />
-							<Route exact path="/portafolio-jumi" element={<HomePage />} />
+							<Route exact path="/" element={<HomePage />} />
 							<Route exact path="/about-me" element={<AboutMePage />} />
 							<Route exact path="/contact" element={<ContactPage />} />
 							<Route exact path="/projects" element={<ProjectsPage />} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Movile from '/assets/img/mockup-movil.png'
-import Web from '/assets/img/mockup-web.png'
+import Movile from '/assets/img/mockup-movil.webp'
+import Web from '/assets/img/mockup-web.webp'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { BarLoader } from 'react-spinners'
