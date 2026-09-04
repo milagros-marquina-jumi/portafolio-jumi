@@ -57,6 +57,24 @@ li {
     list-style: none;
 }
 
+@media screen and (max-width: 1024px) {
+    :root {
+        --padding-page: 2rem;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    :root {
+        --padding-page: 1.25rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    :root {
+        --padding-page: 1rem;
+    }
+}
+
 `
 
 export default GlobalStyle;

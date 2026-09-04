@@ -193,7 +193,7 @@ export function Contact() {
 								placeholder={t('contact-page.message')}
 								className={`input-textarea ${errorVisible('message') ? 'input-invalido' : ''}`}
 								name="message"
-								rows="5"
+								rows="4"
 								id="message_user"
 								value={valores.message}
 								onChange={alCambiar}
@@ -201,17 +201,19 @@ export function Contact() {
 								aria-invalid={Boolean(errorVisible('message'))}
 							></textarea>
 							<p className="mensaje-error" role="alert">{errorVisible('message')}</p>
-							<div className="captcha" ref={captchaRef}></div>
-							<div className="noSelect">
-								<button
-									type="submit"
-									id="btn-send"
-									className="btn-primary cursor-pointer btn-send"
-									disabled={!formularioValido || !captchaResuelto || enviando}
-									title={!captchaResuelto ? t('contact-page.captcha') : undefined}
-								>
-									{enviando ? t('contact-page.sending') : t('contact-page.btn-send')}
-								</button>
+							<div className="pie-form">
+								<div className="captcha" ref={captchaRef}></div>
+								<div className="noSelect">
+									<button
+										type="submit"
+										id="btn-send"
+										className="btn-primary cursor-pointer btn-send"
+										disabled={!formularioValido || !captchaResuelto || enviando}
+										title={!captchaResuelto ? t('contact-page.captcha') : undefined}
+									>
+										{enviando ? t('contact-page.sending') : t('contact-page.btn-send')}
+									</button>
+								</div>
 							</div>
 						</form>
 					</div>

@@ -3,7 +3,7 @@
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: auto auto auto;
-    grid-gap: var(--padding-page);
+    grid-gap: 2.5rem;
     justify-content: center;
     padding: var(--padding-page);
 }
@@ -65,7 +65,7 @@
 .projects-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, 340px);
-    grid-gap: var(--padding-page);
+    grid-gap: 2.5rem;
     width: 100%;
     max-width: var(--max-width);
     justify-content: space-around;

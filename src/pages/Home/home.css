@@ -66,8 +66,21 @@
 }
 
 @media screen and (max-width: 1024px) {
+    .hero {
+        flex-direction: column-reverse;
+        justify-content: center;
+        height: auto;
+        min-height: var(--section-height);
+        gap: 1.5rem;
+    }
+
     .info-hero {
         padding-left: 0;
+        height: auto;
+    }
+
+    .dev-jumi-photo {
+        height: auto;
     }
 }
 

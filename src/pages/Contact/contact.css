@@ -7,7 +7,7 @@
     display: flex;
     width: 100%;
     height: 80%;
-    padding-top: 30px;
+    padding-top: 20px;
     flex-wrap: wrap;
     max-width: var(--max-width);
     align-items: center;
@@ -32,10 +32,10 @@
     height: 45px;
     font-size: 25px;
     display: flex;
-    border: 2px var(--color-green) solid;
+    border: 1px solid rgba(136, 170, 68, 0.45);
     align-items: center;
     border-radius: 5px;
-    margin-bottom: 30px;
+    margin-bottom: 22px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
@@ -80,7 +80,16 @@
 }
 
 .btn-send {
-    margin-top: 20px;
+    margin-top: 0;
+}
+
+.pie-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5em;
 }
 
 input {
@@ -104,6 +113,11 @@ form .capitalize {
     width: 100%;
     resize: none;
     padding: 15px;
+    transition: box-shadow 0.15s;
+}
+
+.input-textarea:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--primary-color);
 }
 
 textarea::-webkit-scrollbar {
@@ -117,8 +131,8 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 .mensaje-error {
-    min-height: 1.4em;
-    margin: 0.35em 0 0.8em;
+    min-height: 1.25em;
+    margin: 0.3em 0 0.6em;
     text-align: left;
     font-size: 0.85em;
     line-height: 1.4;
@@ -132,7 +146,6 @@ textarea::-webkit-scrollbar-thumb {
 .captcha {
     display: flex;
     justify-content: flex-start;
-    margin-top: 0.5em;
     min-height: 78px;
 }
 
@@ -144,4 +157,19 @@ textarea::-webkit-scrollbar-thumb {
 .btn-primary:disabled:hover {
     font-size: 1.1em;
     background: #e7a83b;
+}
+
+@media screen and (max-width: 680px) {
+    .form-contact {
+        padding-top: 0;
+    }
+
+    .container-form .media-form {
+        margin-bottom: 16px;
+    }
+
+    .pie-form {
+        justify-content: center;
+        gap: 1rem;
+    }
 }

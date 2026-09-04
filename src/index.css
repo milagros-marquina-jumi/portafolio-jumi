@@ -51,6 +51,15 @@ button {
   background: #c8943b;
 }
 
+.btn-primary:focus-visible,
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 .section-page {
   display: flex;
   align-items: center;
@@ -68,16 +77,60 @@ button {
 .mode-language {
   display: flex;
   position: absolute;
-  width: 120px;
-  margin-right: 65px;
-  align-items: flex-end;
-  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
   right: 0;
+  margin-right: 65px;
   top: 56px;
+  z-index: 2;
 }
 
 .mode-language img {
-  width: 2em;
+  width: 1.6em;
+  display: block;
+}
+
+.btn-tema {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.btn-tema:hover {
+  opacity: 1;
+}
+
+.selector-idioma {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-idioma {
+  background: none;
+  border: none;
+  padding: 0.28em 0.85em;
+  font-family: var(--font-family-reemkufi);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-idioma:hover {
+  color: white;
+}
+
+.btn-idioma.activo {
+  background: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 /* NAVBAR */
@@ -269,10 +322,7 @@ header nav ol li {
   }
 
   .mode-language {
-    display: inline;
-    align-items: flex-end;
-    justify-content: end;
-    margin-right: 0px;
+    margin-right: var(--padding-page);
   }
 
   /* ABOUT */
@@ -359,17 +409,11 @@ header nav ol li {
 
   /* GENERALES - HOME */
   .mode-language {
-    display: flex;
-    position: absolute;
+    position: static;
     width: 100%;
-    margin-right: 0px;
+    margin: 0;
+    padding: 0.75rem var(--padding-page) 0;
     justify-content: center;
-    top: 56px;
-  }
-
-  .mode-language img {
-    margin-left: 10px;
-    margin-right: 10px;
   }
 
   .links {
@@ -454,15 +498,10 @@ header nav ol li {
     display: none;
   }
 
-  .hero {
-    flex-direction: column-reverse;
-    justify-content: center;
-  }
-
   .dev-jumi-photo img {
     width: 55% !important;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .info-hero h1 {

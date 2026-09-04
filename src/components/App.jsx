@@ -9,8 +9,6 @@ import ProjectsPage from '../pages/Projects/ProjectsPage'
 import { ProjectTypePage } from '../pages/Projects/ProjectType/ProjectTypePage'
 import { ProjectDetailsPage } from '../pages/Projects/ProjectDetails/ProjectDetailsPage'
 import styled, { ThemeProvider } from 'styled-components'
-import langenglish from '/assets/img/lang-english.png'
-import langspanish from '/assets/img/lang-spanish.png'
 import lightMode from '/assets/img/light-mode.png'
 import { useTranslation } from 'react-i18next'
 import { darkTheme, GlobalTheme, lightTheme } from '../assets/styles/theme'
@@ -24,26 +22,38 @@ function App() {
 	const toggleTheme = () => {
 		theme === "light" ? setTheme("dark") : setTheme("light");
 	}
-	const changeLanguageEs = () => {
-		i18n.changeLanguage("en");
-	}
-	const changeLanguageEn = () => {
-		i18n.changeLanguage("es")
-	}
+	const idioma = i18n.resolvedLanguage || i18n.language;
 
 	return (
 		<ThemeProvider theme={theme === "dark" ? lightTheme : darkTheme}>
 			<GlobalTheme />
 			<StyledApp>
 				<div className="mode-language">
-					<div className="noSelect">
-						<img className="cursor-pointer" src={lightMode} alt="" onClick={() => toggleTheme()} />
-					</div>
-					<div className="noSelect" id="language-english" onClick={() => changeLanguageEs()}>
-						<img className="cursor-pointer" src={langenglish} alt="" />
-					</div>
-					<div className="noSelect" id="language-spanish" onClick={() => changeLanguageEn()}>
-						<img className="cursor-pointer" src={langspanish} alt="" />
+					<button
+						type="button"
+						className="btn-tema noSelect cursor-pointer"
+						onClick={() => toggleTheme()}
+						aria-label={theme === "light" ? "Modo oscuro" : "Modo claro"}
+					>
+						<img src={lightMode} alt="" />
+					</button>
+					<div className="selector-idioma noSelect" role="group" aria-label="Idioma">
+						<button
+							type="button"
+							className={`btn-idioma cursor-pointer ${idioma === "es" ? "activo" : ""}`}
+							onClick={() => i18n.changeLanguage("es")}
+							aria-pressed={idioma === "es"}
+						>
+							ES
+						</button>
+						<button
+							type="button"
+							className={`btn-idioma cursor-pointer ${idioma === "en" ? "activo" : ""}`}
+							onClick={() => i18n.changeLanguage("en")}
+							aria-pressed={idioma === "en"}
+						>
+							EN
+						</button>
 					</div>
 				</div>
 				<BrowserRouter basename={import.meta.env.BASE_URL}>
