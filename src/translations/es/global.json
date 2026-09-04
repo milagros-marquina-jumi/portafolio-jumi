@@ -1,19 +1,23 @@
 {
     "about-me-page": {
-        "title": "SOBRE MÍ",
-        "description": "Desarrolladora Full Stack con 6 años de experiencia en tecnologías como Java, JavaScript, NodeJS, Angular, React y AWS. Me enfoco en el aprendizaje constante, la colaboración en equipo y los resultados. Con experiencia en Front-End, Back-End y desarrollo móvil/desktop, he trabajado en sectores como banca, salud y telecomunicaciones,  alicando metodologías ágiles y buenas prácticas.",
+        "title": "Sobre mí",
+        "description": "Software Architect y Full-Stack Engineer con más de 6 años diseñando y construyendo plataformas enterprise desde cero en banca, salud, telecomunicaciones y tecnología. Lidero decisiones de arquitectura de punta a punta —frontend, backend, cloud, seguridad e IA generativa— con foco en escalabilidad, mantenibilidad y experiencia de usuario. Bachiller en Ingeniería de Sistemas por la Universidad Nacional Mayor de San Marcos.",
         "my-skills": "Mis habilidades",
         "see-projects": "Ver proyectos",
         "download-cv": "Descargar CV"
     },
     "home-page": {
         "title": "Hola soy",
-        "description": "Me apasiona el mundo del desarrollo web, aprender sobre nuevas tecnologías y apoyar en el desarrollo de proyectos e iniciativas de mejora para lograr los resultados esperados.",
+        "description": "Diseño y construyo plataformas enterprise de punta a punta: microfrontends con Angular y React, microservicios con Java y Node.js, arquitectura hexagonal y event-driven, e IA generativa aplicada con RAG y agentes.",
         "btn-see-more": "Ver más"
     },
     "projects-page": {
         "title": "Proyectos",
-        "type": "Móvil"
+        "type": "Móvil",
+        "heading": "Mis proyectos",
+        "subtitle": "Elige una categoria para ver el detalle de cada uno.",
+        "count-one": "1 proyecto",
+        "count-many": "{{n}} proyectos"
     },
     "project-type-page": {
         "search": "Buscar proyecto...",
@@ -26,7 +30,21 @@
         "name": "Nombre *",
         "email": "Correo Electrónico *",
         "message": "Mensaje *",
-        "btn-send": "Enviar"
+        "btn-send": "Enviar",
+        "name-required": "Escribe tu nombre.",
+        "name-short": "El nombre debe tener al menos 2 caracteres.",
+        "email-required": "Escribe tu correo electrónico.",
+        "email-invalid": "Ese correo no parece válido.",
+        "message-required": "Escribe tu mensaje.",
+        "message-short": "Cuéntame un poco más: al menos 10 caracteres.",
+        "captcha": "Marca la casilla para confirmar que no eres un robot.",
+        "sending": "Enviando...",
+        "error-quota": "El formulario no está disponible en este momento. Escríbeme por LinkedIn o WhatsApp.",
+        "error-captcha": "La verificación caducó. Vuelve a marcar la casilla.",
+        "error-generic": "Ocurrió un error, por favor inténtalo más tarde.",
+        "success": "El mensaje se envió con éxito",
+        "heading": "Hablemos",
+        "subtitle": "Cuentame en que estas trabajando y te respondo."
     },
     "navbar-page": {
         "home": "Inicio",

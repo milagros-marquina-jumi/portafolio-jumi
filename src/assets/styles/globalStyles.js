@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
     --secondary-color: #1F1F1F;
     --background-light-color: #544d4d;
     --background-dark-color: #424242;
-    --color-green: #88aa44;
 
     --font-family-montserrat: "Montserrat", sans-serif;
     --font-family-reemkufi: "Reem Kufi", sans-serif;
@@ -55,6 +54,24 @@ body::-webkit-scrollbar-thumb {
 ol,
 li {
     list-style: none;
+}
+
+@media screen and (max-width: 1024px) {
+    :root {
+        --padding-page: 2rem;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    :root {
+        --padding-page: 1.25rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    :root {
+        --padding-page: 1rem;
+    }
 }
 
 `

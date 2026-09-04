@@ -1,5 +1,5 @@
 import React from 'react'
-import Error404 from '/assets/img/error-404.png'
+import Error404 from '/assets/img/error-404.webp'
 import { Link } from 'react-router-dom'
 import './not_found.css'
 

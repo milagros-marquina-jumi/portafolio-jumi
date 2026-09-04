@@ -1,9 +1,10 @@
 .project-type {
+    animation: entrada-pagina 0.4s ease both;
     width: 100%;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: auto auto auto;
-    grid-gap: var(--padding-page);
+    grid-gap: 2.5rem;
     justify-content: center;
     padding: var(--padding-page);
 }
@@ -65,7 +66,7 @@
 .projects-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, 340px);
-    grid-gap: var(--padding-page);
+    grid-gap: 2.5rem;
     width: 100%;
     max-width: var(--max-width);
     justify-content: space-around;
@@ -97,15 +98,15 @@ filter-buttons {
 }
 
 .btn-web:hover {
-  background-color: #648a19;
+  background-color: #c8943b;
 }
 
 .btn-movil {
-  background-color: var(--color-green);
+  background-color: #8a6a2c;
 }
 
 .btn-movil:hover {
-  background-color: #648a19;
+  background-color: #a07c34;
 }
 
 .projects-filter {

@@ -36,19 +36,39 @@ button {
 
 .btn-primary {
   background: #e7a83b;
+  color: var(--secondary-color);
   border: none;
   border-radius: 5px;
-  height: 40px;
-  width: 130px;
+  min-height: 48px;
+  min-width: 200px;
+  padding: 0.85em 2em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-reemkufi);
   font-weight: 800;
   font-size: 1.1em;
+  text-decoration: none;
   outline: none;
-  transition: 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .btn-primary:hover {
-  font-size: 15px;
   background: #c8943b;
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:focus-visible,
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 .section-page {
@@ -57,6 +77,81 @@ button {
   justify-content: center;
   min-height: var(--section-height);
   padding: var(--padding-page);
+}
+
+.section-page {
+  animation: entrada-pagina 0.4s ease both;
+}
+
+.hero.section-page {
+  animation-name: entrada-suave;
+}
+
+@keyframes entrada-pagina {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.encabezado-seccion {
+  display: none;
+  width: 100%;
+  max-width: 60ch;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.encabezado-seccion h1,
+.about-me-info h1 {
+  display: block;
+  font-weight: 100;
+  font-size: 2.1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.encabezado-seccion p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media screen and (max-width: 680px) {
+
+  .encabezado-seccion h1,
+  .about-me-info h1 {
+    font-size: 1.7rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .encabezado-seccion {
+    display: block;
+  }
+}
+
+@keyframes entrada-suave {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .section-page,
+  .hero.section-page {
+    animation: none;
+  }
 }
 
 /* ****************************************************************************** */
@@ -68,16 +163,60 @@ button {
 .mode-language {
   display: flex;
   position: absolute;
-  width: 120px;
-  margin-right: 65px;
-  align-items: flex-end;
-  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
   right: 0;
+  margin-right: 65px;
   top: 56px;
+  z-index: 2;
 }
 
 .mode-language img {
-  width: 2em;
+  width: 1.6em;
+  display: block;
+}
+
+.btn-tema {
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+
+.btn-tema:hover {
+  opacity: 1;
+}
+
+.selector-idioma {
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-idioma {
+  background: none;
+  border: none;
+  padding: 0.28em 0.85em;
+  font-family: var(--font-family-reemkufi);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-idioma:hover {
+  color: white;
+}
+
+.btn-idioma.activo {
+  background: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 /* NAVBAR */
@@ -169,7 +308,7 @@ header nav ol li {
 }
 
 .project-item-web:hover {
-  --color: var(--color-green)
+  --color: var(--primary-color)
 }
 
 .project-item h1 {
@@ -205,7 +344,7 @@ header nav ol li {
 }
 
 .container-item-web {
-  border: 2px #88aa44 solid;
+  border: 2px #e7ad47 solid;
 }
 
 .info-item {
@@ -264,15 +403,12 @@ header nav ol li {
 @media screen and (max-width: 1200px) {
 
   /* GENERALES - HOME */
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 55% !important;
   }
 
   .mode-language {
-    display: inline;
-    align-items: flex-end;
-    justify-content: end;
-    margin-right: 0px;
+    margin-right: var(--padding-page);
   }
 
   /* ABOUT */
@@ -288,7 +424,7 @@ header nav ol li {
 
   .about-me-img img {
     width: 100% !important;
-    margin-bottom: 50px !important;
+    margin-bottom: 24px !important;
   }
 
   .about-me-info {
@@ -359,17 +495,11 @@ header nav ol li {
 
   /* GENERALES - HOME */
   .mode-language {
-    display: flex;
-    position: absolute;
+    position: static;
     width: 100%;
-    margin-right: 0px;
+    margin: 0;
+    padding: 0.75rem var(--padding-page) 0;
     justify-content: center;
-    top: 56px;
-  }
-
-  .mode-language img {
-    margin-left: 10px;
-    margin-right: 10px;
   }
 
   .links {
@@ -454,15 +584,10 @@ header nav ol li {
     display: none;
   }
 
-  .hero {
-    flex-direction: column-reverse;
-    justify-content: center;
-  }
-
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 55% !important;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .info-hero h1 {
@@ -547,7 +672,8 @@ header nav ol li {
 
   .about-me-img img {
     width: 50% !important;
-    min-width: 27vh !important;
+    min-width: 0 !important;
+    max-width: 260px;
   }
 
   /* PROJECT */
@@ -563,7 +689,7 @@ header nav ol li {
 @media screen and (max-width: 830px) {
 
   /* GENERALES - HOME */
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 60% !important;
   }
 
@@ -584,7 +710,7 @@ header nav ol li {
 @media screen and (max-width: 680px) {
 
   /* GENERALES - HOME */
-  .dev-jumi-photo img {
+  .dev-jumi-photo .foto-taza {
     width: 60% !important;
   }
 
@@ -631,9 +757,7 @@ header nav ol li {
     font-size: 0.85em !important;
   }
 
-  .about-me-info h1 {
-    font-size: 1.8em !important;
-  }
+
 
   .about-me-info h2 {
     font-size: 1.3em !important;
