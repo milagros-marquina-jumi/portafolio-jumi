@@ -1,5 +1,5 @@
 import React from 'react'
-import DevJumi from '/assets/img/milagrosmarquina.png'
+import DevJumi from '/assets/img/milagrosmarquina.webp'
 import DevRocket from '/assets/img/rocket.webp'
 import { Link } from 'react-router-dom'
 import './home.css'
