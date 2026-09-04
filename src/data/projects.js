@@ -132,6 +132,6 @@ export const getProjecById = (id) => {
     return projects.find(project => project.id === id);
 }
 
-export const getProjecByType = (type) => {
-    return projects.find(project => project.type === type);
+export const getProjectsByType = (type) => {
+    return projects.filter(project => project.type === type);
 }

@@ -1,6 +1,6 @@
 {
     "about-me-page": {
-        "title": "SOBRE MÍ",
+        "title": "Sobre mí",
         "description": "Software Architect y Full-Stack Engineer con más de 6 años diseñando y construyendo plataformas enterprise desde cero en banca, salud, telecomunicaciones y tecnología. Lidero decisiones de arquitectura de punta a punta —frontend, backend, cloud, seguridad e IA generativa— con foco en escalabilidad, mantenibilidad y experiencia de usuario. Bachiller en Ingeniería de Sistemas por la Universidad Nacional Mayor de San Marcos.",
         "my-skills": "Mis habilidades",
         "see-projects": "Ver proyectos",
@@ -13,7 +13,11 @@
     },
     "projects-page": {
         "title": "Proyectos",
-        "type": "Móvil"
+        "type": "Móvil",
+        "heading": "Mis proyectos",
+        "subtitle": "Elige una categoria para ver el detalle de cada uno.",
+        "count-one": "1 proyecto",
+        "count-many": "{{n}} proyectos"
     },
     "project-type-page": {
         "search": "Buscar proyecto...",
@@ -38,7 +42,9 @@
         "error-quota": "El formulario no está disponible en este momento. Escríbeme por LinkedIn o WhatsApp.",
         "error-captcha": "La verificación caducó. Vuelve a marcar la casilla.",
         "error-generic": "Ocurrió un error, por favor inténtalo más tarde.",
-        "success": "El mensaje se envió con éxito"
+        "success": "El mensaje se envió con éxito",
+        "heading": "Hablemos",
+        "subtitle": "Cuentame en que estas trabajando y te respondo."
     },
     "navbar-page": {
         "home": "Inicio",

@@ -59,7 +59,7 @@ function AboutMePage() {
 							</ul>
 						</div>
 						<div className="about-me-info__links noSelect">
-							<Link className="btn-download" to="/projects">
+							<Link className="btn-primary noSelect cursor-pointer" to="/projects">
 								{t('about-me-page.see-projects')}
 							</Link>
 						</div>

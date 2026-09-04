@@ -137,6 +137,10 @@ export function Contact() {
 			<div className="form-contact">
 				<div className="form">
 					<div className="container-form">
+						<div className="encabezado-seccion">
+							<h1>{t('contact-page.heading')}</h1>
+							<p>{t('contact-page.subtitle')}</p>
+						</div>
 						<div className="media-form">
 							<div className="social-media">
 								<a

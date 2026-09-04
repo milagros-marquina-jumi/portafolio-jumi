@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
     --secondary-color: #1F1F1F;
     --background-light-color: #544d4d;
     --background-dark-color: #424242;
-    --color-green: #88aa44;
 
     --font-family-montserrat: "Montserrat", sans-serif;
     --font-family-reemkufi: "Reem Kufi", sans-serif;

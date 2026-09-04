@@ -1,6 +1,6 @@
 {
     "about-me-page": {
-        "title": "ABOUT ME",
+        "title": "About me",
         "description": "Software Architect and Full-Stack Engineer with over 6 years designing and building enterprise platforms from scratch in banking, healthcare, telecommunications and technology. I lead end-to-end architecture decisions —frontend, backend, cloud, security and generative AI— focused on scalability, maintainability and user experience. Systems Engineering degree from Universidad Nacional Mayor de San Marcos.",
         "my-skills": "My skills",
         "see-projects": "See Projects",
@@ -13,7 +13,11 @@
     },
     "projects-page": {
         "title": "Projects",
-        "type": "Mobile"
+        "type": "Mobile",
+        "heading": "My projects",
+        "subtitle": "Pick a category to see each one in detail.",
+        "count-one": "1 project",
+        "count-many": "{{n}} projects"
     },
     "project-type-page": {
         "search": "Search project...",
@@ -38,7 +42,9 @@
         "error-quota": "The form is unavailable right now. Reach me on LinkedIn or WhatsApp.",
         "error-captcha": "The verification expired. Please check the box again.",
         "error-generic": "Something went wrong, please try again later.",
-        "success": "Your message was sent successfully"
+        "success": "Your message was sent successfully",
+        "heading": "Let's talk",
+        "subtitle": "Tell me what you are working on and I'll get back to you."
     },
     "navbar-page": {
         "home": "Home",

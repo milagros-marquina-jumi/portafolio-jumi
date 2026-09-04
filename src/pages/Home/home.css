@@ -152,11 +152,11 @@
     width: 1.5em;
     height: 1.5em;
     border-radius: 50%;
-    background: radial-gradient(circle,
+    background: radial-gradient(closest-side circle,
             rgba(255, 255, 255, 0.95) 0%,
-            rgba(255, 255, 255, 0.55) 45%,
-            rgba(255, 255, 255, 0) 72%);
-    filter: blur(4px);
+            rgba(255, 255, 255, 0.5) 40%,
+            rgba(255, 255, 255, 0) 100%);
+    filter: blur(0.28em);
     opacity: 0;
     animation: subir-humo 5.5s ease-out infinite;
 }

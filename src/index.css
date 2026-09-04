@@ -36,19 +36,30 @@ button {
 
 .btn-primary {
   background: #e7a83b;
+  color: var(--secondary-color);
   border: none;
   border-radius: 5px;
-  height: 40px;
-  width: 130px;
+  min-height: 48px;
+  min-width: 200px;
+  padding: 0.85em 2em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-reemkufi);
   font-weight: 800;
   font-size: 1.1em;
+  text-decoration: none;
   outline: none;
-  transition: 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 
 .btn-primary:hover {
-  font-size: 15px;
   background: #c8943b;
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .btn-primary:focus-visible,
@@ -66,6 +77,81 @@ button:focus-visible,
   justify-content: center;
   min-height: var(--section-height);
   padding: var(--padding-page);
+}
+
+.section-page {
+  animation: entrada-pagina 0.4s ease both;
+}
+
+.hero.section-page {
+  animation-name: entrada-suave;
+}
+
+@keyframes entrada-pagina {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.encabezado-seccion {
+  display: none;
+  width: 100%;
+  max-width: 60ch;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.encabezado-seccion h1,
+.about-me-info h1 {
+  display: block;
+  font-weight: 100;
+  font-size: 2.1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.encabezado-seccion p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media screen and (max-width: 680px) {
+
+  .encabezado-seccion h1,
+  .about-me-info h1 {
+    font-size: 1.7rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .encabezado-seccion {
+    display: block;
+  }
+}
+
+@keyframes entrada-suave {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .section-page,
+  .hero.section-page {
+    animation: none;
+  }
 }
 
 /* ****************************************************************************** */
@@ -222,7 +308,7 @@ header nav ol li {
 }
 
 .project-item-web:hover {
-  --color: var(--color-green)
+  --color: var(--primary-color)
 }
 
 .project-item h1 {
@@ -258,7 +344,7 @@ header nav ol li {
 }
 
 .container-item-web {
-  border: 2px #88aa44 solid;
+  border: 2px #e7ad47 solid;
 }
 
 .info-item {
@@ -338,7 +424,7 @@ header nav ol li {
 
   .about-me-img img {
     width: 100% !important;
-    margin-bottom: 50px !important;
+    margin-bottom: 24px !important;
   }
 
   .about-me-info {
@@ -586,7 +672,8 @@ header nav ol li {
 
   .about-me-img img {
     width: 50% !important;
-    min-width: 27vh !important;
+    min-width: 0 !important;
+    max-width: 260px;
   }
 
   /* PROJECT */
@@ -670,9 +757,7 @@ header nav ol li {
     font-size: 0.85em !important;
   }
 
-  .about-me-info h1 {
-    font-size: 1.8em !important;
-  }
+
 
   .about-me-info h2 {
     font-size: 1.3em !important;
