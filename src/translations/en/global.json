@@ -1,14 +1,14 @@
 {
     "about-me-page": {
         "title": "ABOUT ME",
-        "description": "Full Stack developer with +1 year of experience using technologies like Angular, Spring Boot, React, NodeJS, Java and more. I am passionate about the world of web and mobile development. I have knowledge in Front-End, Back-End and other areas such as mobile development and desktop development. I like to learn about new technologies and support in the development of projects and improvement initiatives to achieve the expected results.",
+        "description": "Software Architect and Full-Stack Engineer with over 6 years designing and building enterprise platforms from scratch in banking, healthcare, telecommunications and technology. I lead end-to-end architecture decisions —frontend, backend, cloud, security and generative AI— focused on scalability, maintainability and user experience. Systems Engineering degree from Universidad Nacional Mayor de San Marcos.",
         "my-skills": "My skills",
         "see-projects": "See Projects",
         "download-cv": "Download CV"
     },
     "home-page": {
         "title": "Hi, I'm",
-        "description": "I am passionate about the world of web development, learning about new technologies and supporting the development of projects and improvement initiatives to achieve the expected results.",
+        "description": "I design and build enterprise platforms end to end: microfrontends with Angular and React, microservices with Java and Node.js, hexagonal and event-driven architecture, and applied generative AI with RAG and agents.",
         "btn-see-more": "See more"
     },
     "projects-page": {

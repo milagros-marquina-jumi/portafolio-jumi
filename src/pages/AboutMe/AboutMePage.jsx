@@ -30,28 +30,32 @@ function AboutMePage() {
 						<br />
 						<div className="list-info-about-me">
 							<ul>
-								<li>• HTML</li>
-								<li>• CSS</li>
-								<li>• SASS</li>
+								<li>• Java (8 - 21)</li>
+								<li>• TypeScript</li>
 								<li>• JavaScript</li>
+								<li>• Node.js</li>
+								<li>• Kotlin</li>
 							</ul>
 							<ul>
-								<li>• React</li>
 								<li>• Angular</li>
-								<li>• NodeJS</li>
-								<li>• Java</li>
+								<li>• React</li>
+								<li>• Vue</li>
+								<li>• Microfrontends</li>
+								<li>• TailwindCSS</li>
 							</ul>
 							<ul>
-								<li>• Git / GitHub</li>
-								<li>• UI / UX</li>
-								<li>• Figma</li>
-								<li>• Photoshop</li>
+								<li>• Spring Boot</li>
+								<li>• NestJS</li>
+								<li>• Quarkus</li>
+								<li>• GraphQL</li>
+								<li>• Kafka</li>
 							</ul>
 							<ul>
-								<li>• MongoDB</li>
-								<li>• MySQL</li>
 								<li>• PostgreSQL</li>
-								<li>• Firebase</li>
+								<li>• MongoDB</li>
+								<li>• AWS / Azure</li>
+								<li>• Docker / Kubernetes</li>
+								<li>• RAG / LLMs</li>
 							</ul>
 						</div>
 						<div className="about-me-info__links noSelect">

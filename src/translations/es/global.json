@@ -1,14 +1,14 @@
 {
     "about-me-page": {
         "title": "SOBRE MÍ",
-        "description": "Desarrolladora Full Stack con 6 años de experiencia en tecnologías como Java, JavaScript, NodeJS, Angular, React y AWS. Me enfoco en el aprendizaje constante, la colaboración en equipo y los resultados. Con experiencia en Front-End, Back-End y desarrollo móvil/desktop, he trabajado en sectores como banca, salud y telecomunicaciones,  alicando metodologías ágiles y buenas prácticas.",
+        "description": "Software Architect y Full-Stack Engineer con más de 6 años diseñando y construyendo plataformas enterprise desde cero en banca, salud, telecomunicaciones y tecnología. Lidero decisiones de arquitectura de punta a punta —frontend, backend, cloud, seguridad e IA generativa— con foco en escalabilidad, mantenibilidad y experiencia de usuario. Bachiller en Ingeniería de Sistemas por la Universidad Nacional Mayor de San Marcos.",
         "my-skills": "Mis habilidades",
         "see-projects": "Ver proyectos",
         "download-cv": "Descargar CV"
     },
     "home-page": {
         "title": "Hola soy",
-        "description": "Me apasiona el mundo del desarrollo web, aprender sobre nuevas tecnologías y apoyar en el desarrollo de proyectos e iniciativas de mejora para lograr los resultados esperados.",
+        "description": "Diseño y construyo plataformas enterprise de punta a punta: microfrontends con Angular y React, microservicios con Java y Node.js, arquitectura hexagonal y event-driven, e IA generativa aplicada con RAG y agentes.",
         "btn-see-more": "Ver más"
     },
     "projects-page": {
