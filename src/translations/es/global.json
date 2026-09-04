@@ -26,7 +26,19 @@
         "name": "Nombre *",
         "email": "Correo Electrónico *",
         "message": "Mensaje *",
-        "btn-send": "Enviar"
+        "btn-send": "Enviar",
+        "name-required": "Escribe tu nombre.",
+        "name-short": "El nombre debe tener al menos 2 caracteres.",
+        "email-required": "Escribe tu correo electrónico.",
+        "email-invalid": "Ese correo no parece válido.",
+        "message-required": "Escribe tu mensaje.",
+        "message-short": "Cuéntame un poco más: al menos 10 caracteres.",
+        "captcha": "Marca la casilla para confirmar que no eres un robot.",
+        "sending": "Enviando...",
+        "error-quota": "El formulario no está disponible en este momento. Escríbeme por LinkedIn o WhatsApp.",
+        "error-captcha": "La verificación caducó. Vuelve a marcar la casilla.",
+        "error-generic": "Ocurrió un error, por favor inténtalo más tarde.",
+        "success": "El mensaje se envió con éxito"
     },
     "navbar-page": {
         "home": "Inicio",

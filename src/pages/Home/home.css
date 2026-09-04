@@ -56,6 +56,19 @@
     align-items: center;
     width: 60%;
     height: 100%;
+    padding-left: 8rem;
+}
+
+@media screen and (max-width: 1440px) {
+    .info-hero {
+        padding-left: 4rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .info-hero {
+        padding-left: 0;
+    }
 }
 
 .info-hero h1 {

@@ -26,7 +26,19 @@
         "name": "Name *",
         "email": "Email *",
         "message": "Message *",
-        "btn-send": "Send"
+        "btn-send": "Send",
+        "name-required": "Enter your name.",
+        "name-short": "Your name must be at least 2 characters.",
+        "email-required": "Enter your email address.",
+        "email-invalid": "That email doesn't look valid.",
+        "message-required": "Write your message.",
+        "message-short": "Tell me a bit more: at least 10 characters.",
+        "captcha": "Check the box to confirm you are not a robot.",
+        "sending": "Sending...",
+        "error-quota": "The form is unavailable right now. Reach me on LinkedIn or WhatsApp.",
+        "error-captcha": "The verification expired. Please check the box again.",
+        "error-generic": "Something went wrong, please try again later.",
+        "success": "Your message was sent successfully"
     },
     "navbar-page": {
         "home": "Home",

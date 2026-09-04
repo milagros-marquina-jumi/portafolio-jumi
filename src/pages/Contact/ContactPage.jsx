@@ -1,51 +1,135 @@
-import React from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Swal from 'sweetalert2'
 import DevRocket from '/assets/img/rocket.webp'
 import emailjs from 'emailjs-com'
 import './contact.css'
 import { useTranslation } from 'react-i18next'
 
+const SERVICE_ID = 'service_60ixqcb'
+const TEMPLATE_ID = 'template_6u5l0nn'
+const PUBLIC_KEY = 'n6GePiP2Xhr2Lr_X3'
+const RECAPTCHA_SITE_KEY = '6LftPqktAAAAANBsXUF1m4AytGsQS2eGdbFWGKuA'
+
+const VALORES_INICIALES = { name: '', user_email: '', message: '' }
+
 export function Contact() {
-	const [t, i18n] = useTranslation("global");
+	const [t] = useTranslation('global')
 
-	const SendEmail = async (e) => {
-		e.preventDefault();
+	const [valores, setValores] = useState(VALORES_INICIALES)
+	const [tocados, setTocados] = useState({})
+	const [enviando, setEnviando] = useState(false)
+	const [captchaResuelto, setCaptchaResuelto] = useState(false)
 
-		emailjs.sendForm(
-			"service_vgizk6g",
-			"template_6u5l0nn",
-			e.target,
-			"n6GePiP2Xhr2Lr_X3"
-		).then(res => {
-			console.log(res);
-			Swal.fire({
-				position: 'top-end',
-				icon: 'success',
-				title: 'El mensaje se envió con éxito',
-				showConfirmButton: false,
-				allowOutsideClick: true,
-				timer: 3000,
-				timerProgressBar: true,
-				toast: true,
+	const formRef = useRef(null)
+	const captchaRef = useRef(null)
+	const widgetId = useRef(null)
+
+	const validar = useCallback((campo, valor) => {
+		const limpio = valor.trim()
+		if (campo === 'name') {
+			if (!limpio) return t('contact-page.name-required')
+			if (limpio.length < 2) return t('contact-page.name-short')
+			return ''
+		}
+		if (campo === 'user_email') {
+			if (!limpio) return t('contact-page.email-required')
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(limpio)) return t('contact-page.email-invalid')
+			return ''
+		}
+		if (!limpio) return t('contact-page.message-required')
+		if (limpio.length < 10) return t('contact-page.message-short')
+		return ''
+	}, [t])
+
+	const errores = {
+		name: validar('name', valores.name),
+		user_email: validar('user_email', valores.user_email),
+		message: validar('message', valores.message),
+	}
+	const formularioValido = !errores.name && !errores.user_email && !errores.message
+
+	const alCambiar = (evento) => {
+		const { name, value } = evento.target
+		setValores((previos) => ({ ...previos, [name]: value }))
+		setTocados((previos) => ({ ...previos, [name]: true }))
+	}
+
+	const alSalir = (evento) => {
+		const { name } = evento.target
+		setTocados((previos) => ({ ...previos, [name]: true }))
+	}
+
+	const errorVisible = (campo) => (tocados[campo] ? errores[campo] : '')
+
+	useEffect(() => {
+		let cancelado = false
+
+		const dibujar = () => {
+			if (cancelado) return
+			if (!window.grecaptcha || !window.grecaptcha.render) {
+				window.setTimeout(dibujar, 200)
+				return
+			}
+			if (widgetId.current !== null || !captchaRef.current) return
+			if (captchaRef.current.childElementCount > 0) return
+
+			widgetId.current = window.grecaptcha.render(captchaRef.current, {
+				sitekey: RECAPTCHA_SITE_KEY,
+				theme: 'dark',
+				callback: () => setCaptchaResuelto(true),
+				'expired-callback': () => setCaptchaResuelto(false),
+				'error-callback': () => setCaptchaResuelto(false),
 			})
-			setTimeout(() => {
-				/* window.location.reload(); */
-				document.getElementById("name_user").value = "";
-				document.getElementById("email_user").value = "";
-				document.getElementById("message_user").value = "";
-				document.getElementById("btn-send").disabled = true;
-			}, 1);
-		}).catch(err => {
-			console.log(err);
-			Swal.fire({
-				position: 'top-end',
-				icon: 'error',
-				title: 'Ocurrió un error, por favor inténtalo mas tarde',
-				showConfirmButton: false,
-				toast: true,
-			})
+		}
+
+		dibujar()
+		return () => {
+			cancelado = true
+		}
+	}, [])
+
+	const reiniciarCaptcha = () => {
+		setCaptchaResuelto(false)
+		if (window.grecaptcha && widgetId.current !== null) {
+			window.grecaptcha.reset(widgetId.current)
+		}
+	}
+
+	const avisar = (icon, title) =>
+		Swal.fire({
+			position: 'top-end',
+			icon,
+			title,
+			showConfirmButton: false,
+			timer: icon === 'success' ? 3000 : 6000,
+			timerProgressBar: true,
+			toast: true,
+			allowOutsideClick: true,
 		})
 
+	const SendEmail = async (evento) => {
+		evento.preventDefault()
+		setTocados({ name: true, user_email: true, message: true })
+		if (!formularioValido || !captchaResuelto || enviando) return
+
+		setEnviando(true)
+		try {
+			await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, evento.target, PUBLIC_KEY)
+			setValores(VALORES_INICIALES)
+			setTocados({})
+			reiniciarCaptcha()
+			avisar('success', t('contact-page.success'))
+		} catch (error) {
+			const estado = error?.status
+			const detalle = error?.text || error?.message || 'sin detalle'
+			let mensaje = t('contact-page.error-generic')
+			if (estado === 426 || estado === 429) mensaje = t('contact-page.error-quota')
+			if (/captcha/i.test(detalle)) mensaje = t('contact-page.error-captcha')
+			reiniciarCaptcha()
+			avisar('error', `${mensaje} (${estado ?? 'sin codigo'}: ${detalle})`)
+		} finally {
+			setEnviando(false)
+		}
 	}
 
 	return (
@@ -78,37 +162,56 @@ export function Contact() {
 								</a>
 							</div>
 						</div>
-						<form autoComplete="off" onSubmit={SendEmail}>
+						<form autoComplete="off" onSubmit={SendEmail} ref={formRef} noValidate>
 							<input
 								placeholder={t('contact-page.name')}
-								required
-								className="input-textarea capitalize"
+								className={`input-textarea capitalize ${errorVisible('name') ? 'input-invalido' : ''}`}
 								name="name"
 								type="text"
 								maxLength="40"
 								id="name_user"
+								value={valores.name}
+								onChange={alCambiar}
+								onBlur={alSalir}
+								aria-invalid={Boolean(errorVisible('name'))}
 							/>
-							<br />
+							<p className="mensaje-error" role="alert">{errorVisible('name')}</p>
 							<input
-								required
 								placeholder={t('contact-page.email')}
-								className="input-textarea"
+								className={`input-textarea ${errorVisible('user_email') ? 'input-invalido' : ''}`}
 								name="user_email"
 								type="email"
 								maxLength="100"
 								id="email_user"
+								value={valores.user_email}
+								onChange={alCambiar}
+								onBlur={alSalir}
+								aria-invalid={Boolean(errorVisible('user_email'))}
 							/>
-							<br />
+							<p className="mensaje-error" role="alert">{errorVisible('user_email')}</p>
 							<textarea
 								placeholder={t('contact-page.message')}
-								required
-								className="input-textarea"
+								className={`input-textarea ${errorVisible('message') ? 'input-invalido' : ''}`}
 								name="message"
 								rows="5"
 								id="message_user"
+								value={valores.message}
+								onChange={alCambiar}
+								onBlur={alSalir}
+								aria-invalid={Boolean(errorVisible('message'))}
 							></textarea>
+							<p className="mensaje-error" role="alert">{errorVisible('message')}</p>
+							<div className="captcha" ref={captchaRef}></div>
 							<div className="noSelect">
-								<button className="btn-primary cursor-pointer btn-send">{t('contact-page.btn-send')}</button>
+								<button
+									type="submit"
+									id="btn-send"
+									className="btn-primary cursor-pointer btn-send"
+									disabled={!formularioValido || !captchaResuelto || enviando}
+									title={!captchaResuelto ? t('contact-page.captcha') : undefined}
+								>
+									{enviando ? t('contact-page.sending') : t('contact-page.btn-send')}
+								</button>
 							</div>
 						</form>
 					</div>
