@@ -1,6 +1,6 @@
 import React from 'react'
 import DevJumi from '/assets/img/milagrosmarquina.png'
-import DevRocket from '/assets/img/rocket.png'
+import DevRocket from '/assets/img/rocket.webp'
 import { Link } from 'react-router-dom'
 import './home.css'
 import { useTranslation } from 'react-i18next'
@@ -53,7 +53,17 @@ function Home() {
 			<div>
 			</div>
 			<figure className="dev-jumi-photo noSelect">
-				<img src={DevJumi} alt="Milagros Marquina" />
+				<span className="foto-taza">
+					<img src={DevJumi} alt="Milagros Marquina" />
+					<span className="humo" aria-hidden="true">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+				</span>
 			</figure>
 		</main>
 	)

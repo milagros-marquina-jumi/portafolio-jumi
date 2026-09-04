@@ -1,0 +1,75 @@
+name: Desplegar a GitHub Pages
+
+# Publica el sitio en cada push a master. Sustituye al `npm run deploy` manual,
+# que dependia de que alguien se acordara y de que su disco tuviera la rama al
+# dia: mas de una vez se publico lo que hubiera compilado de antes.
+#
+# REQUIERE un cambio en el repositorio, una sola vez:
+#   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+#
+# A partir de ahi la rama gh-pages deja de servirse y se puede borrar. Eso
+# resuelve de paso los restos que arrastraba (.github/, .githooks/): cada
+# despliegue sube un artefacto nuevo, sin nada anterior debajo.
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un despliegue a la vez, y sin cancelar el que ya empezo: cortar a medias
+# dejaria el sitio publicado a medias.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    name: Compilar el sitio
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Version de Node
+        run: node --version && npm --version
+
+      # --ignore-scripts es deliberado y no lo reemplaza CI=true: un preinstall
+      # o un postinstall de una dependencia comprometida se ejecutaria aqui con
+      # acceso a la red. La compilacion se invoca despues, de forma explicita.
+      - name: Instalar dependencias
+        run: npm ci --ignore-scripts
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Preparar Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
+
+      - name: Subir el artefacto
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        with:
+          path: dist
+
+  publicar:
+    name: Publicar
+    needs: construir
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+
+    steps:
+      - name: Desplegar
+        id: despliegue
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5.0.1

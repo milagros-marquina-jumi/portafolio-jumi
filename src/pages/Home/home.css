@@ -56,6 +56,32 @@
     align-items: center;
     width: 60%;
     height: 100%;
+    padding-left: 8rem;
+}
+
+@media screen and (max-width: 1440px) {
+    .info-hero {
+        padding-left: 4rem;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .hero {
+        flex-direction: column-reverse;
+        justify-content: center;
+        height: auto;
+        min-height: var(--section-height);
+        gap: 1.5rem;
+    }
+
+    .info-hero {
+        padding-left: 0;
+        height: auto;
+    }
+
+    .dev-jumi-photo {
+        height: auto;
+    }
 }
 
 .info-hero h1 {
@@ -96,10 +122,82 @@
     margin: 0;
 }
 
-.dev-jumi-photo img {
+.foto-taza {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
     width: 50%;
     max-width: 790px;
     min-width: 200px;
+}
+
+.dev-jumi-photo img {
+    width: 100%;
+}
+
+.humo {
+    position: absolute;
+    left: 11%;
+    top: 47%;
+    width: 6%;
+    height: 0;
+    font-size: clamp(10px, 1.5vw, 24px);
+    pointer-events: none;
+}
+
+.humo span {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background: radial-gradient(closest-side circle,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(255, 255, 255, 0.5) 40%,
+            rgba(255, 255, 255, 0) 100%);
+    filter: blur(0.28em);
+    opacity: 0;
+    animation: subir-humo 5.5s ease-out infinite;
+}
+
+.humo span:nth-child(1) { animation-delay: 0s; }
+.humo span:nth-child(2) { animation-delay: 0.9s; }
+.humo span:nth-child(3) { animation-delay: 1.8s; }
+.humo span:nth-child(4) { animation-delay: 2.7s; }
+.humo span:nth-child(5) { animation-delay: 3.6s; }
+.humo span:nth-child(6) { animation-delay: 4.5s; }
+
+@keyframes subir-humo {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 0) scale(0.35);
+    }
+
+    10% {
+        opacity: 0.9;
+    }
+
+    45% {
+        opacity: 0.7;
+        transform: translate(-150%, -5em) scale(1.15);
+    }
+
+    75% {
+        opacity: 0.35;
+        transform: translate(25%, -9em) scale(1.9);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-90%, -12.5em) scale(2.7);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .humo {
+        display: none;
+    }
 }
 
 .img-hero {

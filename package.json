@@ -8,10 +8,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist --remove \"**/*\""
   },
   "dependencies": {
     "emailjs-com": "^3.2.0",
+    "gsap": "^3.15.0",
     "i18next": "^21.7.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -36,6 +37,11 @@
     "vite": "^6.2.0"
   },
   "overrides": {
-    "picomatch": "^4.0.7"
+    "micromatch": {
+      "picomatch": "^2.3.2"
+    },
+    "babel-plugin-styled-components": {
+      "picomatch": "^2.3.2"
+    }
   }
 }

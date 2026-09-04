@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import me from '/assets/img/milagrosmarquina.png'
+import me from '/assets/img/jumi-saludando.webp'
 import { useTranslation } from 'react-i18next'
 import './about_me.css'
 
@@ -30,32 +30,36 @@ function AboutMePage() {
 						<br />
 						<div className="list-info-about-me">
 							<ul>
-								<li>• HTML</li>
-								<li>• CSS</li>
-								<li>• SASS</li>
+								<li>• Java (8 - 21)</li>
+								<li>• TypeScript</li>
 								<li>• JavaScript</li>
+								<li>• Node.js</li>
+								<li>• Kotlin</li>
 							</ul>
 							<ul>
-								<li>• React</li>
 								<li>• Angular</li>
-								<li>• NodeJS</li>
-								<li>• Java</li>
+								<li>• React</li>
+								<li>• Vue</li>
+								<li>• Microfrontends</li>
+								<li>• TailwindCSS</li>
 							</ul>
 							<ul>
-								<li>• Git / GitHub</li>
-								<li>• UI / UX</li>
-								<li>• Figma</li>
-								<li>• Photoshop</li>
+								<li>• Spring Boot</li>
+								<li>• NestJS</li>
+								<li>• Quarkus</li>
+								<li>• GraphQL</li>
+								<li>• Kafka</li>
 							</ul>
 							<ul>
-								<li>• MongoDB</li>
-								<li>• MySQL</li>
 								<li>• PostgreSQL</li>
-								<li>• Firebase</li>
+								<li>• MongoDB</li>
+								<li>• AWS / Azure</li>
+								<li>• Docker / Kubernetes</li>
+								<li>• RAG / LLMs</li>
 							</ul>
 						</div>
 						<div className="about-me-info__links noSelect">
-							<Link className="btn-download" to="/projects">
+							<Link className="btn-primary noSelect cursor-pointer" to="/projects">
 								{t('about-me-page.see-projects')}
 							</Link>
 						</div>

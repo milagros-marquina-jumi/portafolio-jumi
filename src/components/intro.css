@@ -1,0 +1,96 @@
+.intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.intro-telon {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50.5%;
+    background: #1F1F1F;
+}
+
+.intro-telon-arriba {
+    top: 0;
+}
+
+.intro-telon-abajo {
+    bottom: 0;
+}
+
+.intro-marca {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    visibility: hidden;
+}
+
+.intro-halo {
+    position: absolute;
+    top: 0.75rem;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 60px rgba(231, 173, 71, 0.35);
+    pointer-events: none;
+}
+
+.intro-logo {
+    width: 4rem;
+    height: auto;
+    image-rendering: -webkit-optimize-contrast;
+    filter: drop-shadow(0 0 22px rgba(231, 173, 71, 0.45));
+}
+
+.intro-nombre {
+    display: flex;
+    overflow: hidden;
+    margin-top: 1.6rem;
+    font-family: var(--font-family-reemkufi);
+    font-size: clamp(1.4rem, 5vw, 2.6rem);
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    color: white;
+}
+
+.intro-letra {
+    display: inline-block;
+}
+
+.intro-rol {
+    margin-top: 0.7rem;
+    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.intro-saltar {
+    position: absolute;
+    bottom: 2.5rem;
+    z-index: 2;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intro {
+        display: none;
+    }
+}

@@ -7,7 +7,7 @@
     display: flex;
     width: 100%;
     height: 80%;
-    padding-top: 30px;
+    padding-top: 20px;
     flex-wrap: wrap;
     max-width: var(--max-width);
     align-items: center;
@@ -32,10 +32,10 @@
     height: 45px;
     font-size: 25px;
     display: flex;
-    border: 2px var(--color-green) solid;
+    border: 1px solid rgba(231, 173, 71, 0.35);
     align-items: center;
     border-radius: 5px;
-    margin-bottom: 30px;
+    margin-bottom: 22px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
@@ -64,28 +64,32 @@
 
 
 .illustration .img-send-email {
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: 'FlipH';
     pointer-events: none;
-    -webkit-filter: FlipH;
-    -ms-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -moz-transform: scaleX(-1);
+    display: flex;
+    justify-content: center;
 }
 
 .img-send-email img {
-    width: 23em;
+    width: 100%;
+    max-width: 320px;
 }
 
 .btn-send {
-    margin-top: 20px;
+    margin-top: 0;
+}
+
+.pie-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5em;
 }
 
 input {
     height: 45px;
-    margin-bottom: 30px;
+    margin-bottom: 0;
     font-family: var(--font-family-reemkufi);
     font-weight: 300;
 }
@@ -104,6 +108,11 @@ form .capitalize {
     width: 100%;
     resize: none;
     padding: 15px;
+    transition: box-shadow 0.15s;
+}
+
+.input-textarea:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--primary-color);
 }
 
 textarea::-webkit-scrollbar {
@@ -114,4 +123,48 @@ textarea::-webkit-scrollbar {
 textarea::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
+}
+
+.mensaje-error {
+    min-height: 1.25em;
+    margin: 0.3em 0 0.6em;
+    text-align: left;
+    font-size: 0.85em;
+    line-height: 1.4;
+    color: #f2a08a;
+}
+
+.input-invalido {
+    box-shadow: inset 0 0 0 1px #f2a08a;
+}
+
+.captcha {
+    display: flex;
+    justify-content: flex-start;
+    min-height: 78px;
+}
+
+.btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.btn-primary:disabled:hover {
+    font-size: 1.1em;
+    background: #e7a83b;
+}
+
+@media screen and (max-width: 680px) {
+    .form-contact {
+        padding-top: 0;
+    }
+
+    .container-form .media-form {
+        margin-bottom: 16px;
+    }
+
+    .pie-form {
+        justify-content: center;
+        gap: 1rem;
+    }
 }
