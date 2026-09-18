@@ -16,7 +16,8 @@
 #                          el detector se excluye del barrido de firmas POR
 #                          NOMBRE, asi que una copia en otra carpeta seria una
 #                          zona ciega.
-#   MTS_BLOQUEAR_SCRIPTS   1 = un .sh/.py/.js fuera de la allowlist se bloquea.
+#   MTS_BLOQUEAR_SCRIPTS   1 = un .sh/.py/.js/.ps1 fuera de la allowlist se
+#                          bloquea.
 #                          0 = solo se aplica el bit 100755. Un repositorio de
 #                          codigo no puede prohibir fuentes; ver la limitacion
 #                          aceptada en el ADR-0011.
@@ -101,6 +102,166 @@ ejecutable_permitido() {
   return 1
 }
 
+# Un .npmrc no es un secreto por existir. El mapeo de un ambito a un registro
+# -"@mimotech:registry=https://npm.pkg.github.com"- es configuracion publica, y
+# cualquier consumidor de un paquete privado la necesita versionada para poder
+# resolverlo. Lo que no puede entrar es una credencial.
+#
+# Asi que aqui se mira el contenido y no el nombre. Se bloquea si una directiva
+# de credencial trae un valor literal; se deja pasar si esta vacia o si es una
+# interpolacion de entorno -"${GITHUB_TOKEN}"-, que es como se escribe cuando el
+# token lo inyecta el CI y no el archivo.
+#
+# Si el contenido no se puede leer, se bloquea. Ante la duda el fallo es cerrado:
+# preferimos rechazar un archivo legitimo a publicar un token.
+# Lee el contenido del fichero en TODAS las versiones que toca el modo y lo
+# deja en $tmp/contenido: la del indice, la del arbol, o una por commit del
+# rango -un token commiteado y borrado despues sigue en el historial que se
+# empuja-. Devuelve 1 si no se pudo leer ninguna: el que llama decide, y en
+# este script decide bloquear.
+versiones_de() { # versiones_de <ruta>
+  local ruta="$1"
+  local leido=0
+  : > "$tmp/contenido"
+
+  case "$modo" in
+    --indice)
+      git show ":$ruta" >> "$tmp/contenido" 2>/dev/null && leido=1 ;;
+    --arbol)
+      if [ -f "$ruta" ]; then
+        cat -- "$ruta" >> "$tmp/contenido" 2>/dev/null && leido=1
+      else
+        git show ":$ruta" >> "$tmp/contenido" 2>/dev/null && leido=1
+      fi ;;
+    --rango)
+      local commit
+      while IFS= read -r commit; do
+        [ -n "$commit" ] || continue
+        if git show "$commit:$ruta" >> "$tmp/contenido" 2>/dev/null; then
+          leido=1
+          printf '\n' >> "$tmp/contenido"
+        fi
+      done <<EOF_COMMITS
+$(git rev-list "$rango" 2>/dev/null)
+EOF_COMMITS
+      ;;
+  esac
+
+  [ "$leido" -eq 1 ]
+}
+
+npmrc_con_credencial() { # npmrc_con_credencial <ruta>
+  local ruta="$1"
+
+  # Sin contenido legible no hay veredicto, y sin veredicto se bloquea.
+  versiones_de "$ruta" || return 1
+
+  while IFS= read -r linea; do
+    case "$linea" in
+      \#*|"") continue ;;
+    esac
+    case "$linea" in
+      *_authToken=*|*_auth=*|*_password=*)
+        valor="${linea#*=}"
+        valor="${valor%%[[:space:]]*}"
+        case "$valor" in
+          "") ;;
+          '${'*'}') ;;
+          *) exit 1 ;;
+        esac ;;
+    esac
+  done < "$tmp/contenido"
+  return 0
+}
+
+# Credenciales por CONTENIDO, no por nombre de fichero.
+#
+# Hasta la 0.12.0 este script solo miraba nombres. Un token real dentro de un
+# fichero de nombre inocente pasaba limpio, y paso: bizner-projects-back llevo
+# un PAT de GitHub -ghp_...- dentro de .env.example, que es un nombre PERMITIDO,
+# hasta el commit inicial de su repositorio migrado. migrar-repo.sh anuncio
+# "sin secretos ni artefactos" con el token dentro.
+#
+# Se buscan formatos de token con prefijo fijo y longitud conocida: la
+# probabilidad de que un texto legitimo los produzca por azar es despreciable,
+# asi que no hay allowlist. Lo unico que se perdona son los placeholders
+# evidentes -ocho X seguidas, ocho ceros, asteriscos, puntos suspensivos-,
+# porque un .env.example los necesita. Un token real no tiene excepcion.
+#
+# Un fichero binario no se mira: un PNG puede contener AKIA seguido de dieciseis
+# mayusculas por puro azar. Y uno que no se pueda leer se bloquea.
+# Tabla: patron<TAB>tipo. Se lee una vez; la alternancia de todos sirve para
+# un unico grep por fichero -y en --arbol, uno por lote de ficheros-. Con un
+# grep por patron el arbol de bizner-projects-back no terminaba en diez minutos
+# en Windows, donde cada proceso cuesta.
+PATRONES_CREDENCIAL='ghp_[A-Za-z0-9]{36}	token de GitHub
+gh[ousr]_[A-Za-z0-9]{36}	token de GitHub
+github_pat_[A-Za-z0-9_]{22,}	token de GitHub
+AKIA[0-9A-Z]{16}	clave de acceso de AWS
+GOCSPX-[A-Za-z0-9_-]{20,}	secreto OAuth de Google
+AIza[0-9A-Za-z_-]{35}	clave de API de Google
+re_[A-Za-z0-9]{8}_[A-Za-z0-9]{16,}	clave de Resend
+[sr]k_live_[A-Za-z0-9]{20,}	clave de Stripe
+sk-ant-[A-Za-z0-9_-]{30,}	clave de Anthropic
+sk-proj-[A-Za-z0-9_-]{30,}	clave de OpenAI
+xox[baprs]-[A-Za-z0-9-]{10,}	token de Slack
+npm_[A-Za-z0-9]{36}	token de npm
+glpat-[A-Za-z0-9_-]{20}	token de GitLab
+hf_[A-Za-z0-9]{30,}	token de Hugging Face
+f[om][12]_[A-Za-z0-9_-]{40,}	token de Fly
+SG\.[A-Za-z0-9_-]{22}\.[A-Za-z0-9_-]{43}	clave de SendGrid
+-----BEGIN [A-Z ]*PRIVATE KEY-----	clave privada'
+PATRON_CREDENCIAL_TODOS=$(printf '%s\n' "$PATRONES_CREDENCIAL" | cut -f1 | paste -sd'|' -)
+PLACEHOLDERS='X{8}|x{8}|0{8}|\*{4}|\.\.\.'
+
+# Que tipo de credencial hay en $tmp/contenido. Devuelve 0 e imprime el tipo.
+tipo_de_credencial() {
+  local patron tipo
+  while IFS='	' read -r patron tipo; do
+    [ -n "$patron" ] || continue
+    if LC_ALL=C grep -oE -e "$patron" "$tmp/contenido" 2>/dev/null | LC_ALL=C grep -qvE "$PLACEHOLDERS"; then
+      echo "$tipo"
+      return 0
+    fi
+  done <<EOF_PATRONES
+$PATRONES_CREDENCIAL
+EOF_PATRONES
+  return 1
+}
+
+credencial_en_contenido() { # credencial_en_contenido <ruta>  -> imprime el tipo y devuelve 0 si hay
+  local ruta="$1"
+  versiones_de "$ruta" || { echo "contenido ilegible"; return 0; }
+
+  # Un solo grep con todos los patrones descarta el 99% de los ficheros con
+  # un proceso. Solo si algo casa se mira el binario y el tipo.
+  LC_ALL=C grep -qE -e "$PATRON_CREDENCIAL_TODOS" "$tmp/contenido" 2>/dev/null || return 1
+
+  # Binario = contiene bytes NUL. No vale "algun byte no imprimible": en locale
+  # C una enie o una tilde en un comentario ya lo es, y un .env.example con
+  # comentarios en espanol se saltaba entero. wc -c y no [ -n ], porque bash
+  # descarta los NUL al capturar la salida y la variable quedaria vacia.
+  if [ "$(LC_ALL=C tr -dc '\000' < "$tmp/contenido" | wc -c)" -gt 0 ]; then
+    return 1
+  fi
+
+  tipo_de_credencial
+}
+
+# En --arbol los ficheros estan en disco: un grep por lote de doscientos deja
+# la lista de candidatos, y el bucle principal solo lee los que aparecen ahi.
+: > "$tmp/candidatos"
+if [ "$modo" = "--arbol" ]; then
+  # xargs -0 y no -d: -d es solo GNU y esto tiene que correr en macOS. El
+  # guard de $# evita que un grep sin ficheros se quede leyendo la entrada.
+  xargs -0 -n 200 sh -c '[ $# -gt 0 ] || exit 0; LC_ALL=C grep -lE -e "$0" -- "$@" 2>/dev/null; :' \
+    "$PATRON_CREDENCIAL_TODOS" < "$tmp/lst" > "$tmp/candidatos" || true
+fi
+es_candidato() { # es_candidato <ruta>: en --arbol, solo los que el barrido marco
+  [ "$modo" != "--arbol" ] && return 0
+  grep -qxF -- "$1" "$tmp/candidatos"
+}
+
 : > "$tmp/bloqueados"
 while IFS= read -r -d '' ruta; do
   baja=$(printf '%s' "$ruta" | tr 'A-Z' 'a-z')
@@ -108,9 +269,17 @@ while IFS= read -r -d '' ruta; do
   motivo=""
 
   # Secretos
+  #
+  # El patron cubre CUALQUIER fichero que termine en .env, no solo los que
+  # empiezan por punto. `development.env` y `config/prod.env` son ficheros de
+  # entorno igual que `.env`, y hasta la 0.11.0 pasaban limpios: lo destapo
+  # bizner-projects-back, cuyo config/enviroments/development.env alojo un AKIA
+  # de AWS, un GOCSPX- de Google, un ghp_ de GitHub y un re_ de Resend. El
+  # control decia "ningun archivo prohibido" con los cuatro dentro.
   case "$base" in
-    .env.example) ;;
-    .env|.env.*|.npmrc|.netrc|id_rsa|id_rsa.*|id_ed25519|id_ed25519.*) motivo="secreto" ;;
+    .env.example|*.env.example) ;;
+    .env|.env.*|*.env|.netrc|id_rsa|id_rsa.*|id_ed25519|id_ed25519.*) motivo="secreto" ;;
+    .npmrc) npmrc_con_credencial "$ruta" || motivo="secreto (credencial en .npmrc)" ;;
     credentials*.json|*.pem|*.key|*.p12|*.pfx|*.ppk|*.jks|*.keystore) motivo="secreto" ;;
   esac
   case "$baja" in
@@ -137,8 +306,13 @@ while IFS= read -r -d '' ruta; do
   esac
 
   # Binarios y ejecutables
+  #
+  # .ps1 y .psm1 NO estan aqui: son fuentes de texto plano, como .sh o .py, y
+  # Windows no los ejecuta al abrirlos -el Explorador los manda al Bloc de notas
+  # y la directiva de ejecucion los bloquea-. Se tratan como scripts, abajo.
+  # .bat, .cmd, .vbs y .scr si arrancan con un doble clic, y siguen bloqueados.
   case "$base" in
-    *.exe|*.dll|*.so|*.dylib|*.msi|*.bat|*.cmd|*.ps1|*.psm1|*.vbs|*.scr) [ -z "$motivo" ] && motivo="ejecutable" ;;
+    *.exe|*.dll|*.so|*.dylib|*.msi|*.bat|*.cmd|*.vbs|*.scr) [ -z "$motivo" ] && motivo="ejecutable" ;;
     *.jar|*.apk|*.wasm|*.pyc|*.lnk) [ -z "$motivo" ] && motivo="binario" ;;
   esac
 
@@ -151,10 +325,17 @@ while IFS= read -r -d '' ruta; do
     motivo="suplantacion del detector"
   fi
 
+  # Credenciales en el contenido, sea cual sea el nombre
+  if [ -z "$motivo" ]; then
+    if es_candidato "$ruta"; then
+      tipo=$(credencial_en_contenido "$ruta") && motivo="secreto en el contenido ($tipo)"
+    fi
+  fi
+
   # Scripts fuera de la allowlist
   if [ -z "$motivo" ] && [ "$hay_allowlist" -eq 1 ] && [ "$bloquear_scripts" -eq 1 ]; then
     case "$base" in
-      *.sh|*.py|*.js|*.mjs|*.cjs|*.rb|*.pl)
+      *.sh|*.py|*.js|*.mjs|*.cjs|*.rb|*.pl|*.ps1|*.psm1)
         ejecutable_permitido "$ruta" || motivo="script no declarado en $permitidos_lista" ;;
     esac
   fi
