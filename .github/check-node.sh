@@ -113,19 +113,56 @@ comprobar_scripts() {
   return 0
 }
 
+# Que archivos se miran: SOLO los que git rastrea.
+#
+# Antes se recorria el disco con find, y en una maquina donde ya se habia
+# compilado eso incluia la salida del build: .next/package.json,
+# .next/types/package.json y equivalentes. Ninguno de esos archivos lo escribio
+# nadie, ninguno viaja al repositorio, y en el runner no existen todavia porque
+# la compilacion aun no ha corrido.
+#
+# El problema no es el ruido, es la divergencia: un package.json GENERADO con
+# un postinstall haria que el hook local abortara un commit que el CI aprueba.
+# Un control que dice cosas distintas en local y en CI acaba desactivado.
+#
+# Si esto no es un arbol de git no hay forma de saber que esta rastreado, y
+# entonces se recorre el disco como antes. Es deliberado y no es un fail-open:
+# recorrer de mas hace fallar de mas, nunca aprobar de mas.
+listar_package_json() {
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    git ls-files -- '*package.json' 2>/dev/null || return 1
+  else
+    find . -name package.json -not -path './node_modules/*' -not -path '*/node_modules/*' -not -path './.git/*' 2>/dev/null
+  fi
+}
+
 recorrer() {
-  local que="$1" encontrados=0
-  # -prune sobre node_modules: los package.json de las dependencias no son
-  # responsabilidad de este repositorio, y son decenas de miles.
+  # OJO con el nombre: `lista` ya es la ruta de la allowlist, y el ambito
+  # dinamico de bash haria que esta local la tapara dentro de
+  # comprobar_scripts. La bateria lo detecto en el primer intento.
+  local que="$1" encontrados=0 archivos
+  # Falla cerrado: sin esto, un listado que fallara dejaria la lista vacia y el
+  # control diria "no hay package.json, nada que comprobar", que es aprobar sin
+  # haber mirado.
+  if ! archivos=$(listar_package_json); then
+    echo "::error::No se pudo listar los archivos a revisar. No se puede verificar."
+    exit 1
+  fi
   while IFS= read -r pj; do
     [ -z "$pj" ] && continue
+    # Un node_modules/ rastreado es raro y desaconsejable, pero si aparece, sus
+    # package.json son de las dependencias y no de este repositorio.
+    case "$pj" in node_modules/*|*/node_modules/*) continue ;; esac
+    # git ls-files lista el INDICE: un archivo puede estar rastreado y borrado
+    # del arbol de trabajo.
+    [ -f "$pj" ] || continue
     encontrados=$((encontrados + 1))
     case "$que" in
       lockfile) comprobar_lockfile "$(dirname "$pj")" ;;
       scripts)  comprobar_scripts "$pj" ;;
     esac
   done <<EOF
-$(find . -name package.json -not -path './node_modules/*' -not -path '*/node_modules/*' -not -path './.git/*' 2>/dev/null)
+$archivos
 EOF
   if [ "$encontrados" -eq 0 ]; then
     printf 'OK: no hay package.json; nada que comprobar (%s).\n' "$que"
