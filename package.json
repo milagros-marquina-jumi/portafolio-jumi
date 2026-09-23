@@ -16,7 +16,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-i18next": "^17.0.13",
-    "react-router-dom": "^7.18.3",
+    "react-router-dom": "^7.18.4",
     "react-spinners": "^0.17.0",
     "styled-components": "^5.3.5",
     "sweetalert2": "^11.4.4"
