@@ -60,3 +60,6 @@ jobs:
 
       - name: Revisar el codigo
         run: pnpm run lint
+
+      - name: Pruebas
+        run: pnpm run test
