@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
@@ -12,8 +12,8 @@ export default defineConfig({
   // devolviendo el mismo valor. Se quita porque no decidia nada y obligaba a
   // depender de @types/node, que dejo de venir de arrastre al subir
   // @vitejs/plugin-react a 6.
-  base: '/portafolio-jumi/',
+  base: "/portafolio-jumi/",
   build: {
     chunkSizeWarningLimit: 1000,
   },
-})
+});

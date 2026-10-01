@@ -1,26 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';  // Asegúrate de importar desde 'react-dom/client'
-import './index.css';
-import App from './components/App';
-import GlobalStyle from './assets/styles/globalStyles';  // Ruta correcta
-import { I18nextProvider } from 'react-i18next';
-import i18next from 'i18next';
-
-import global_es from "./translations/es/global.json";
-import global_en from "./translations/en/global.json";
+import ReactDOM from "react-dom/client"; // Asegúrate de importar desde 'react-dom/client'
+import "./index.css";
+import i18next from "i18next";
+import { I18nextProvider } from "react-i18next";
+import GlobalStyle from "./assets/styles/globalStyles"; // Ruta correcta
+import App from "./components/App";
+import globalEn from "./translations/en/global.json";
+import globalEs from "./translations/es/global.json";
 
 // Configuración de i18next para la internacionalización
 i18next.init({
   interpolation: { escapeValue: false },
-  lng: 'es',
+  lng: "es",
   resources: {
-    es: { global: global_es },
-    en: { global: global_en },
-  }
+    es: { global: globalEs },
+    en: { global: globalEn },
+  },
 });
 
 // Usamos createRoot en lugar de render para React 18
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 // Renderizado de la aplicación con i18next y GlobalStyles
 root.render(

@@ -74,6 +74,6 @@ li {
     }
 }
 
-`
+`;
 
 export default GlobalStyle;

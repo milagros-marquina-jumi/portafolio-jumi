@@ -1,25 +1,25 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from "styled-components";
 
 export const lightTheme = {
-    body: '#424242',
-    fontColor: '#424242',
-    background: '#6A6767',
-    buttonproject: '#303030',
-    buttonprojectHover: '#515151',
-}
+  body: "#424242",
+  fontColor: "#424242",
+  background: "#6A6767",
+  buttonproject: "#303030",
+  buttonprojectHover: "#515151",
+};
 
 export const darkTheme = {
-    body: '#1F1F1F',
-    fontColor: '#757575',
-    background: '#424242',
-    buttonproject: '#424242',
-    buttonprojectHover: '#282828',
-}
+  body: "#1F1F1F",
+  fontColor: "#757575",
+  background: "#424242",
+  buttonproject: "#424242",
+  buttonprojectHover: "#282828",
+};
 
 export const GlobalTheme = createGlobalStyle`
 
     body {
-        background-color: ${(props => props.theme.body)};
+        background-color: ${(props) => props.theme.body};
     }
     .section-about {
         background-color: ${(props) => props.theme.body};
@@ -41,8 +41,8 @@ export const GlobalTheme = createGlobalStyle`
         background-color: ${(props) => props.theme.buttonprojectHover};
     }
     ol.active {
-        background-color: ${(props => props.theme.body)};
+        background-color: ${(props) => props.theme.body};
     }
 
 }
-`
+`;

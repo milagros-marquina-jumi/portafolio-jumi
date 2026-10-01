@@ -29,8 +29,7 @@ describe("traducciones", () => {
   });
 
   it("ningun texto esta vacio", () => {
-    const leer = (objeto, ruta) =>
-      ruta.split(".").reduce((valor, parte) => valor?.[parte], objeto);
+    const leer = (objeto, ruta) => ruta.split(".").reduce((valor, parte) => valor?.[parte], objeto);
 
     for (const idioma of [es, en]) {
       const vacias = clavesEs.filter((c) => {
